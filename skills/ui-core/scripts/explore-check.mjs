@@ -33,14 +33,27 @@ const refs = [];
   }
 })(project);
 
+// The explore command records an open comparison here so a later session can pick it up.
+const statePath = path.join(project, "design-system", "explore.json");
+let pending = null;
+if (fs.existsSync(statePath)) {
+  try { pending = JSON.parse(fs.readFileSync(statePath, "utf8")); } catch { pending = { unreadable: true }; }
+}
+const leftovers = files.length > 0 || refs.length > 0;
+
 console.log(
   JSON.stringify(
     {
       project: project.replace(/\\/g, "/"),
-      clean: files.length === 0 && refs.length === 0,
+      clean: !leftovers && !pending,
+      pending,
       leftoverFiles: files,
       leftoverReferences: refs.slice(0, 30),
-      note: files.length || refs.length ? "Delete the files and remove the references, then run this again." : "No explore drafts, helper or references remain.",
+      note: pending
+        ? "A comparison is open (see pending). Ask the user whether to continue it or discard it before starting other UI work."
+        : leftovers
+          ? "Draft files or references remain but no comparison is recorded. Delete the files and remove the references, then run this again."
+          : "No explore drafts, helper or references remain.",
     },
     null,
     2

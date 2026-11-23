@@ -53,6 +53,7 @@ Zero-dependency Node scripts in `scripts/`, run as `node "<skill folder>/scripts
 | `audit.mjs [path]` | Static scan for accessibility, state, consistency and copy issues, sorted by severity | ready |
 | `check-diff.mjs --project <p>` | Classify uncommitted changes as style-only, markup, logic or non-UI, to show a styling pass left logic alone | ready |
 | `verify-compare.mjs <before> <after>` | Compare two rendered-page measurements and list what got worse | ready |
+| `explore-listen.mjs --port <n> --token <t>` | Background listener: reports a click on the explore bar (apply, new variations) by exiting with one JSON line | ready |
 | `explore-check.mjs --project <p>` | Confirm an explore session left no drafts or helper code behind | ready |
 | `sources.mjs --project <p>` | List installed UI skills, the project's libraries and registries, and a catalog of shadcn registries | ready |
 
