@@ -13,8 +13,9 @@ Status: early development, unpublished. All seven commands are written. `palette
 | `/ui-creator:sources` | Lists installed UI skills, the project's libraries and registries, and a catalog of shadcn registries; saves your selection. |
 | `/ui-creator:element <component>` | Improves one component. |
 | `/ui-creator:page <route>` | Improves one page. |
+| `/ui-creator:library` | Saves designs you like to a personal library outside the project and reuses them in other projects. |
 | `/ui-creator:overhaul` | Reworks the whole app in phases, stopping for approval. |
-| `/ui-creator:explore <element>` | Shows layout alternatives for one element live in the browser, side by side, and applies the one you pick. React with hot reload only. |
+| `/ui-creator:explore <element>` | Shows layout alternatives for one element live in the browser, side by side, and applies the one you pick. A bar in the page switches drafts, opens a phone view, and (with a local listener) removes, requests, saves and applies drafts without typing in chat. Comparisons need React with hot reload; the element picker dock works on any framework. |
 
 The `ui-core` skill loads automatically for UI work and holds the rules, data and scripts the commands share.
 

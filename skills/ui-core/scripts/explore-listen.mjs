@@ -3,7 +3,8 @@
 //   node explore-listen.mjs --port 5199 --token <secret> [--out <file>] [--timeout-min 120]
 // Run it in the background. It prints one JSON line and exits when the user clicks Apply, More or Cancel
 // in the bar, or picks another element; that exit is the signal to act. "Remove" clicks are collected and
-// reported with it. A "more" signal may carry a short note; a "pick" signal carries what was clicked.
+// reported with it. A "more" signal may carry a short note; a "pick" signal carries what was clicked;
+// "save" names a draft to keep in the user's library; "library" asks to see what is saved.
 // It only records which button was pressed for which draft. It reads and writes no project files and
 // listens on 127.0.0.1 only; requests without the token are refused.
 import http from "node:http";
@@ -22,7 +23,7 @@ if (!/^[\w-]{8,64}$/.test(token)) {
 }
 
 const KEY = /^[\w-]{1,24}$/;
-const ENDING = new Set(["apply", "more", "cancel", "pick"]);
+const ENDING = new Set(["apply", "more", "cancel", "pick", "save", "library"]);
 // Free text from the page is cut short and stripped of control characters before it is reported.
 const clean = (s, max) => String(s ?? "").replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
 const removed = [];
@@ -65,9 +66,9 @@ const server = http.createServer((req, res) => {
     try { m = JSON.parse(body); } catch { return send(400, { ok: false, error: "not json" }); }
     if (m?.token !== token) return send(403, { ok: false });
     const { action, key, component } = m;
-    if (!["apply", "more", "cancel", "remove", "pick"].includes(action)) return send(400, { ok: false, error: "unknown action" });
+    if (!["apply", "more", "cancel", "remove", "pick", "save", "library"].includes(action)) return send(400, { ok: false, error: "unknown action" });
     if (!KEY.test(String(component ?? ""))) return send(400, { ok: false, error: "bad component" });
-    if ((action === "apply" || action === "remove") && !KEY.test(String(key ?? ""))) return send(400, { ok: false, error: "bad key" });
+    if ((action === "apply" || action === "remove" || action === "save") && !KEY.test(String(key ?? ""))) return send(400, { ok: false, error: "bad key" });
 
     if (action === "remove") {
       if (!removed.includes(key)) removed.push(key);
@@ -75,7 +76,7 @@ const server = http.createServer((req, res) => {
     }
     send(200, { ok: true });
     const extra = {};
-    if (action === "apply") extra.key = key;
+    if (action === "apply" || action === "save") extra.key = key;
     if (action === "more") extra.note = clean(m.note, 200);
     if (action === "pick") {
       const p = m.picked ?? {};

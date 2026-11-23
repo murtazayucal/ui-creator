@@ -54,6 +54,7 @@ Zero-dependency Node scripts in `scripts/`, run as `node "<skill folder>/scripts
 | `check-diff.mjs --project <p>` | Classify uncommitted changes as style-only, markup, logic or non-UI, to show a styling pass left logic alone | ready |
 | `verify-compare.mjs <before> <after>` | Compare two rendered-page measurements and list what got worse | ready |
 | `explore-listen.mjs --port <n> --token <t>` | Background listener: reports a click on the explore bar (apply, new variations) by exiting with one JSON line | ready |
+| `library.mjs <save|list|show|remove>` | The user's personal library of saved designs, shared across projects (`~/.ui-creator/library`) | ready |
 | `explore-check.mjs --project <p>` | Confirm an explore session left no drafts or helper code behind | ready |
 | `sources.mjs --project <p>` | List installed UI skills, the project's libraries and registries, and a catalog of shadcn registries | ready |
 
@@ -63,4 +64,4 @@ Never judge contrast by eye; run `contrast.mjs`. Text needs 4.5:1, large text an
 
 ## Commands
 
-The plugin's user-invoked commands build on this skill: `sources`, `palette`, `audit`, `element`, `page`, `explore`, `overhaul`.
+The plugin's user-invoked commands build on this skill: `sources`, `palette`, `audit`, `element`, `page`, `explore`, `overhaul`, `library`.
