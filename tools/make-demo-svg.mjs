@@ -134,20 +134,30 @@ const keycaps = keys
     );
   })
   .join("");
+// The bar as the tool draws it: scope and drafts | view tools (narrow view, fine-tune, focus) |
+// New variations | Apply | menu. The focus tool is lit, because the close-up is the focus view.
+const stroke = (d, color) => `<path d="${d}" fill="none" stroke="${color}" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>`;
+const BAR_W = 664;
+const BAR_X = (1280 - BAR_W) / 2;
+const APPLY_X = 530;
 const bar = `
-<g class="bar"><g transform="translate(330 646)">
-  <rect width="620" height="48" rx="12" fill="${TOOL}" stroke="#2e2e34"/>
+<g class="bar"><g transform="translate(${BAR_X} 646)">
+  <rect width="${BAR_W}" height="48" rx="12" fill="${TOOL}" stroke="#2e2e34"/>
   <circle cx="20" cy="24" r="3.5" fill="${LIME}"/>
   ${text(34, 28, "StatCard", `font-family="${MONO}" font-size="12" font-weight="600" fill="#ececf1"`)}
   <rect x="114" y="8" width="160" height="32" rx="9" fill="#1a1a1e"/>
   ${keycaps}
-  <rect x="290" y="8" width="212" height="32" rx="8" fill="#1a1a1e" stroke="#2e2e34"/>
-  ${text(302, 28, "more futuristic", `font-size="13" fill="#ececf1"`)}
-  <line x1="398" y1="8" x2="398" y2="40" stroke="#2e2e34"/>
-  ${text(450, 28, "+ New variations", `text-anchor="middle" font-size="12" font-weight="600" fill="#ececf1"`)}
-  <rect x="516" y="8" width="96" height="32" rx="8" fill="${LIME}"/>
-  ${text(564, 28, "Apply", `class="applyText" text-anchor="middle" font-size="13" font-weight="700" fill="${TOOL}"`)}
-  <g class="applied"><rect x="516" y="8" width="96" height="32" rx="8" fill="#ffc53d"/>${text(564, 28, "✓ Applied", `text-anchor="middle" font-size="13" font-weight="700" fill="${TOOL}"`)}</g>
+  <line x1="286" y1="12" x2="286" y2="36" stroke="#2e2e34"/>
+  <g transform="translate(298 10)">${stroke("M10 5h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-8a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1z M13 20h2", "#9a9aa5")}</g>
+  <g transform="translate(330 10)">${stroke("M6 9h10 M20 9h2 M6 19h4 M14 19h8 M18 7v4 M12 17v4", "#9a9aa5")}</g>
+  <rect x="362" y="10" width="28" height="28" rx="8" fill="${LIME}"/>
+  <g transform="translate(362 10)">${stroke("M7 11V7h4 M21 11V7h-4 M7 17v4h4 M21 17v4h-4 M12 12h4v4h-4z", TOOL)}</g>
+  <line x1="402" y1="12" x2="402" y2="36" stroke="#2e2e34"/>
+  ${text(466, 28, "+  New variations", `text-anchor="middle" font-size="13" font-weight="600" fill="#ececf1"`)}
+  <rect x="${APPLY_X}" y="8" width="92" height="32" rx="8" fill="${LIME}"/>
+  ${text(APPLY_X + 46, 28, "✓ Apply", `text-anchor="middle" font-size="13" font-weight="700" fill="${TOOL}"`)}
+  <g class="applied"><rect x="${APPLY_X}" y="8" width="92" height="32" rx="8" fill="#ffc53d"/>${text(APPLY_X + 46, 28, "✓ Applied", `text-anchor="middle" font-size="13" font-weight="700" fill="${TOOL}"`)}</g>
+  <circle cx="636" cy="24" r="1.8" fill="#ececf1"/><circle cx="643" cy="24" r="1.8" fill="#ececf1"/><circle cx="650" cy="24" r="1.8" fill="#ececf1"/>
 </g></g>`;
 
 // ---- the close-up: the picked element alone, and its drafts listed beside it ----
@@ -225,7 +235,7 @@ text{font-family:${SANS}}
 @keyframes fCard{0%,15%{opacity:0}16%,23%{opacity:1}25%,100%{opacity:0}}
 @keyframes settled{0%,93.5%{opacity:0}94%,98%{opacity:1}100%{opacity:0}}
 @keyframes applied{0%,85.4%{opacity:0}85.6%,100%{opacity:1}}
-@keyframes cursor{0%{opacity:0;${at(180, 560)}}3%{opacity:1;${at(180, 560)}}6.25%,8%{opacity:1;${at(84, 688)}}12.5%{opacity:1;${at(330, 440)}}16.25%,22%{opacity:1;${at(cardX(picked) + 170, 222)}}23.5%,79%{opacity:0;${at(980, 590)}}81%{opacity:1;${at(980, 590)}}84.5%,88%{opacity:1;${at(898, 676)}}90%,100%{opacity:0;${at(898, 676)}}}
+@keyframes cursor{0%{opacity:0;${at(180, 560)}}3%{opacity:1;${at(180, 560)}}6.25%,8%{opacity:1;${at(84, 688)}}12.5%{opacity:1;${at(330, 440)}}16.25%,22%{opacity:1;${at(cardX(picked) + 170, 222)}}23.5%,79%{opacity:0;${at(BAR_X + APPLY_X + 130, 590)}}81%{opacity:1;${at(BAR_X + APPLY_X + 130, 590)}}84.5%,88%{opacity:1;${at(BAR_X + APPLY_X + 52, 676)}}90%,100%{opacity:0;${at(BAR_X + APPLY_X + 52, 676)}}}
 @keyframes ripple{0%,6.2%{opacity:0;transform:scale(.2)}6.3%{opacity:.95;transform:scale(.2)}8.6%{opacity:0;transform:scale(1)}18.6%{opacity:0;transform:scale(.2)}18.75%{opacity:.95;transform:scale(.2)}21%{opacity:0;transform:scale(1)}85.2%{opacity:0;transform:scale(.2)}85.4%{opacity:.95;transform:scale(.2)}87.8%{opacity:0;transform:scale(1)}100%{opacity:0;transform:scale(1)}}
 `;
 

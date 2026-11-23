@@ -83,6 +83,12 @@ Open the Style window, pick one, mix two, or describe your own in a sentence. Th
 
 A style sets shape (surface, edge, depth, corners, type), not color. Where a style and an accessibility rule conflict, the rule wins and the style is adapted; the styles known to be hard on contrast are marked in the window.
 
+## Finds what breaks on narrow screens
+
+The narrow view is a second copy of your page docked beside it at phone width. It looks for trouble by itself: content wider than the screen or spilling out of its box, text cut off, tap targets under 24px. Each one is marked where it is, and one click hands the list to Claude to fix, without touching the wide layout. Drag the frame's edge to try any other width.
+
+![The narrow view marks what overflows at 375px, the layout comes back fixed, and the frame is dragged wider](docs/images/narrow.svg)
+
 ## Everything from the browser
 
 With the local listener running you do not need to go back to the chat:
