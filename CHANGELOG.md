@@ -4,6 +4,12 @@ What changed in each version of ui-creator. Newest first.
 
 To get new versions automatically, turn on auto-update for the marketplace: in Claude Code run `/plugin`, open the **Marketplaces** tab, select `ui-creator` and turn auto-update on. To update by hand, see [Staying up to date](README.md#staying-up-to-date).
 
+## 0.8.4 (2026-11-23)
+
+- **Angular 22.** The Angular adapters no longer import `ComponentFactoryResolver`, which Angular 22 removed, so comparisons build and run there. Run in a browser on Angular 22.3 and, for the old fallback, on Angular 12.2.
+- **Finds your running app.** A new script reads the port your project is set up for, checks which local ports answer, and confirms the answer is this project, so the browser opens on the right address without asking you. It asks only when it cannot tell.
+- **Applying is calmer.** The component is rewritten in one step before the temporary files are removed, so the page does not pass through a broken state, and the bar says "Applying…" across the reloads.
+
 ## 0.8.3 (2026-11-23)
 
 - `explore` checks its drafts against the list of machine-made looks before showing them: a tell has to earn its place or be redrawn, and two drafts that differ only in decoration are not two alternatives. What you asked for (a design language, a note) is never treated as a tell.

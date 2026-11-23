@@ -106,6 +106,31 @@ export const signal = (body) =>
 
 // { up: the listener server answers, listening: the agent is waiting for a click right now }
 const DOWN = { up: false, listening: false };
+// What the agent was last asked to do, kept for this tab so the bar can still say so after the page
+// reloads while files change under it. Cleared when the agent is waiting again.
+const WORK = "ui-explore-working";
+export function noteWork(action) {
+  try {
+    window.sessionStorage.setItem(WORK, JSON.stringify({ action, at: Date.now() }));
+  } catch {
+    // No storage: the bar falls back to its plain "busy" text after a reload.
+  }
+}
+export function clearWork() {
+  try {
+    window.sessionStorage.removeItem(WORK);
+  } catch {
+    // Nothing to clear.
+  }
+}
+export function working() {
+  try {
+    const w = JSON.parse(window.sessionStorage.getItem(WORK) ?? "null");
+    return w && Date.now() - w.at < 10 * 60_000 ? w.action : null;
+  } catch {
+    return null;
+  }
+}
 export const ping = () =>
   port
     ? fetch(`http://127.0.0.1:${port}/ping?token=${token}`)

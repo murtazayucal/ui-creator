@@ -14,7 +14,7 @@
 // - With a listener configured, the bar can also remove, request, save and apply drafts, pick elements
 //   and ask for drafts in a chosen design language.
 import { exploreConfig } from "./explore-config.js";
-import { describe, icon, inFrame, ping, signal, startPicking, UI } from "./explore-pick.js";
+import { clearWork, describe, icon, inFrame, noteWork, ping, signal, startPicking, UI, working } from "./explore-pick.js";
 import { openStylePicker, styleLabel } from "./explore-styles.js";
 
 const { port } = exploreConfig;
@@ -990,6 +990,7 @@ function createBar() {
     return signal({ component: v.targets[0].name, ...body, targets })
       .then((ok) => {
         ui.sent = ok;
+        if (ok) noteWork(body.action);
         // Applied or closed: the fine-tuning has been handed over or dropped, so stop painting it.
         if (ok && (body.action === "apply" || body.action === "cancel")) {
           for (const x of targets) {
@@ -1214,9 +1215,12 @@ function createBar() {
     if (!ui.live || !ui.listening) {
       // Server down: buttons are off. Server up but the agent is not waiting: it is handling a click
       // (ours, if we just sent one) or no session is attached.
-      const working = ui.live && ui.sent;
-      const t = make("span", { ...HINT, color: working ? UI.warn : UI.muted });
-      t.textContent = !ui.live ? L.offline : working ? L.sent : L.busy;
+      // Applying and closing rewrite files, so the page reloads under the bar: say what is going on
+      // for as long as it lasts, also after a reload.
+      const doing = working();
+      const busy = ui.live && (ui.sent || doing);
+      const t = make("span", { ...HINT, color: busy ? UI.warn : UI.muted });
+      t.textContent = !ui.live ? L.offline : !busy ? L.busy : doing === "apply" ? L.applying ?? "Applying… the page may reload a few times" : doing === "cancel" ? L.closing ?? "Closing… the page may reload" : L.sent;
       el.append(t);
       closePop();
       return refocus();
@@ -1275,6 +1279,7 @@ function createBar() {
       const changed = up !== ui.live || listening !== ui.listening;
       // The agent waiting again means the last request was handled.
       if (listening && !ui.listening) ui.sent = false;
+      if (listening) clearWork();
       ui.live = up;
       ui.listening = listening;
       if (changed) render();

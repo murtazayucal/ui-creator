@@ -168,9 +168,10 @@ The plugin never checks for updates by itself. What changed in each version is i
 
 ## What it runs and writes on your machine
 
-Everything the plugin does happens on your machine. None of its scripts makes a network request.
+Everything the plugin does happens on your machine. None of its scripts makes a request to another machine.
 
 - **Scripts.** Node scripts in `skills/ui-core/scripts/` read your project's source files to audit them, detect the framework, look up palettes, compute contrast and compare a diff. They print results for Claude to read.
+- **Finding your running app.** To open the right address without asking you for a port, one script asks the usual local ports (`localhost` only) which of them answer, and checks that the answer is this project: by the `package.json` the dev server serves, or by looking up which process listens on the port (`netstat` and a process query on Windows, `lsof` elsewhere) and where it was started. It starts nothing.
 - **Files in your project.** The `design-system/` folder described above. During `explore`: a temporary `__explore__` folder of helper files, a temporary drafts file next to the component, and a temporary wrapper around it. The drafts file and the wrapper are removed when you apply or close that comparison; the helper folder goes with the last one.
 - **A local listener, during `explore`.** A small HTTP server on `127.0.0.1` at a free port, guarded by a random token, so the bar in your browser can tell Claude what you clicked. It carries the click (which draft, which element, your note) and nothing else, and exits by itself after twelve idle hours.
 - **A Git hook, during `explore`.** A pre-commit check in your repository's `.git/hooks` and two lines in `.git/info/exclude`, so temporary comparison code is not committed by accident. An existing pre-commit hook is kept and extended, not replaced. Both are taken out again at cleanup.

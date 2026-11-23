@@ -6,7 +6,7 @@
 // Plain JavaScript, so it works with any framework. It needs the listener to be running; without it the
 // dock says so and does nothing else.
 import { exploreConfig } from "./explore-config.js";
-import { ACCENTS, CREDIT, getPrefs, icon, inFrame, ping, setPrefs, signal, startPicking, UI } from "./explore-pick.js";
+import { ACCENTS, clearWork, CREDIT, getPrefs, icon, inFrame, ping, noteWork, setPrefs, signal, startPicking, UI, working } from "./explore-pick.js";
 import { openStylePicker, styleLabel } from "./explore-styles.js";
 
 const L = exploreConfig.labels;
@@ -71,9 +71,11 @@ function mount() {
     const on = live && listening;
     pick.style.display = style.style.display = library.style.display = on ? "inline-flex" : "none";
     status.style.display = on ? "none" : "";
-    status.style.color = live && sent ? UI.warn : UI.muted;
-    status.textContent = !live ? L.offline : sent ? L.sent : L.busy;
-    dot.style.background = on ? UI.accent : live && sent ? UI.warn : UI.muted;
+    const doing = working();
+    const busy = live && (sent || doing);
+    status.style.color = busy ? UI.warn : UI.muted;
+    status.textContent = !live ? L.offline : !busy ? L.busy : doing === "apply" ? L.applying ?? "Applying… the page may reload a few times" : doing === "cancel" ? L.closing ?? "Closing… the page may reload" : L.sent;
+    dot.style.background = on ? UI.accent : busy ? UI.warn : UI.muted;
     dot.style.boxShadow = on ? `0 0 0 3px ${UI.glow}` : "none";
     pick.label.textContent = stopPick ? L.picking : L.pick;
     pick.style.background = stopPick ? UI.accent : "transparent";
@@ -85,6 +87,7 @@ function mount() {
     signal({ component: "dock", ...body })
       .then((ok) => {
         sent = ok;
+        if (ok) noteWork(body.action);
         if (ok) listening = false;
         render();
       })
@@ -238,6 +241,7 @@ function mount() {
     ping().then((p) => {
       // The agent waiting again means the last request was handled.
       if (p.listening && !listening) sent = false;
+      if (p.listening) clearWork();
       live = p.up;
       listening = p.listening;
       render();

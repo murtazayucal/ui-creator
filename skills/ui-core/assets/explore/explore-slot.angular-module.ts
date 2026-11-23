@@ -30,7 +30,8 @@
 // the decorator below and to the wrapper, the current component and the drafts.
 // `bind` carries inputs by name; `on` carries a handler per output name.
 // All behaviour (which draft shows where, the bar, the listener) lives in explore-core.js.
-import { AfterViewInit, Component, ComponentFactoryResolver, ElementRef, Input, NgModule, OnChanges, OnDestroy, Type, ViewChild, ViewContainerRef } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, NgModule, OnChanges, OnDestroy, Type, ViewChild, ViewContainerRef } from "@angular/core";
+import * as ng from "@angular/core";
 import { attach } from "./explore-core.js";
 
 @Component({
@@ -50,7 +51,10 @@ export class ExploreSlotComponent implements AfterViewInit, OnChanges, OnDestroy
   private subs = [];
   private slot = null;
 
-  constructor(private host: ElementRef<HTMLElement>, private factories: ComponentFactoryResolver) {}
+  // Nothing but the host element is injected here. The component factory resolver, needed on
+  // Angular 12 only, is looked up when it is used: newer Angular versions refuse it as a
+  // constructor parameter.
+  constructor(private host: ElementRef<HTMLElement>) {}
 
   ngAfterViewInit() {
     this.render();
@@ -72,8 +76,13 @@ export class ExploreSlotComponent implements AfterViewInit, OnChanges, OnDestroy
     // Angular 13+ creates a component from its class; Angular 12 needs a factory.
     try {
       this.ref = this.outlet.createComponent(type);
-    } catch {
-      this.ref = this.outlet.createComponent(this.factories.resolveComponentFactory(type));
+    } catch (failed) {
+      // Angular 22 no longer exports the resolver. It is looked up by a name the bundler cannot
+      // follow, so the file compiles there without a warning and still finds it on Angular 12.
+      const Resolver = (ng as any)[["Component", "FactoryResolver"].join("")];
+      const factories = Resolver ? this.outlet.injector.get(Resolver, null) : null;
+      if (!factories) throw failed;
+      this.ref = this.outlet.createComponent(factories.resolveComponentFactory(type));
     }
     for (const [name, handler] of Object.entries(this.on)) {
       const output = this.ref.instance[name];

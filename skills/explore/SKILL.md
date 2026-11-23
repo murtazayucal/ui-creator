@@ -51,7 +51,7 @@ Run `explore-check.mjs --project <project>` first. If it reports `pending`, a co
 
 ## 1. Select
 
-1. Open the app in the browser; start the dev server if it is not running.
+1. Open the app in the browser, finding its address as `references/verification.md` ("Opening the app") in the core files says: `dev-server.mjs` finds the running dev server, and tells you to start it or ask the user when it cannot.
 2. Evaluate the contents of `assets/explore/inspect.js` in the page. Read the file and pass its text to the browser's script tool; the dev server will not serve it.
 3. Find the element:
    - From a description: `__uiExplore.describe({ text: "<visible text>" })` or `__uiExplore.describe("<css selector>")`.
@@ -147,8 +147,10 @@ If `react` is false (not React, or a production build), use the `repeated` field
 
 ## 6. Apply and clean up
 
-19. Move the chosen draft's markup into the component's own file under its original name, selector, props and events. In Vue, Svelte and Angular this replaces the temporary wrapper; delete the `.current` file.
-20. Delete the drafts file and drafts folder, and remove the wrapper and its imports. Remove this comparison from `design-system/explore.json`. When no comparison is left open and design mode is off, also delete the `__explore__` folder and `explore.json`, stop the listener, and run `explore-guard.mjs remove --project <project>`. If design mode is on, keep the folder and the listener running.
+The user is watching the page while you do this, and every file you save reloads it. Do the edits in the order below and never delete a file that something still imports: a missing import shows an error overlay or a blank page until your next edit. Do not restart the dev server.
+
+19. In **one edit**, rewrite the component's own file to its final form: the chosen draft's markup under the original name, selector, props and events, with the wrapper and the imports of the drafts and the slot gone. After this save the page shows the result and nothing refers to the temporary files. In Vue, Svelte and Angular this replaces the temporary wrapper; delete the `.current` file.
+20. Only now delete the drafts file and drafts folder. Remove this comparison from `design-system/explore.json`. When no comparison is left open and design mode is off, also delete the `__explore__` folder and `explore.json`, stop the listener, and run `explore-guard.mjs remove --project <project>`. If design mode is on, keep the folder and the listener running.
 21. Run `node "${CLAUDE_PLUGIN_ROOT}/skills/ui-core/scripts/explore-check.mjs" --project <project>`. It must report `clean: true`.
 22. Reload the page and check the browser console for errors.
 23. Run the change protocol's after-batch checks (`check-diff.mjs`, `audit.mjs`, lint).

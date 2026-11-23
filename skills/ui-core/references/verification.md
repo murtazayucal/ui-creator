@@ -15,6 +15,17 @@ Capture the same set before the change and after it.
 
 For a single component, one page at 375 and 1280 is enough.
 
+## Opening the app
+
+Find the running app yourself before asking the user for an address: run `node "${CLAUDE_PLUGIN_ROOT}/skills/ui-core/scripts/dev-server.mjs" --project <project>`. It reads the port the project is set up for, checks which local ports answer, and confirms that what answers is this project.
+
+- **`best` is set:** open that address in the browser. If a tab already shows it, use that tab and reload it; do not open a second one.
+- **Several candidates, or `ask` is true:** show the user the addresses in `running` with the reason for each and ask which one, or for the address.
+- **Nothing is running and `start` is set:** start that command as a background command, wait for its ready line, and run the script again. Do not start a second server on another port for a project that already has one.
+- **Nothing is running and there is no dev script:** ask the user how to start the app, or for the address.
+
+After you change a file, look at the page before you judge it. Most dev servers update the page by themselves; when the change is not there (the old text or class is still in the page), reload it. Reload also after changing a config file, a stylesheet entry or anything the dev server reads once at start.
+
 ## Procedure
 
 1. **Make sure you see the current build.** Reload after editing. Confirm one specific change is present in the page (a class, a text, a size) before judging anything. A stale page is the most common false pass.

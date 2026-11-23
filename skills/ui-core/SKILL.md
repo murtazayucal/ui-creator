@@ -51,6 +51,7 @@ Zero-dependency Node scripts in `scripts/`, run as `node "<skill folder>/scripts
 | `style.mjs [--id <a,b>]` | Catalog of 12 design languages (glassmorphism, neo-brutalism, bento...): shape rules, needs, risks and known mixes | ready |
 | `contrast.mjs <fg> <bg> [...]` | WCAG 2.2 contrast for color pairs (hex, oklch, hsl, rgb) | ready |
 | `detect-stack.mjs [project]` | Report framework, styling approach, component library and token files | ready |
+| `dev-server.mjs --project <p>` | Find this project's dev server among what is running on this machine, and the address to open | ready |
 | `audit.mjs [path]` | Static scan for accessibility, state, consistency and copy issues, sorted by severity | ready |
 | `check-diff.mjs --project <p>` | Classify uncommitted changes as style-only, markup, logic or non-UI, to show a styling pass left logic alone | ready |
 | `verify-compare.mjs <before> <after>` | Compare two rendered-page measurements and list what got worse | ready |
