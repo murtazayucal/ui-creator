@@ -61,10 +61,11 @@ let hasAnimation = false;
 let hasReducedMotion = false;
 
 for (const file of files) {
-  const ext = path.extname(file);
   const text = fs.readFileSync(file, "utf8");
   const lines = text.split("\n");
-  const markup = MARKUP.has(ext);
+  const ext = path.extname(file);
+  // An Angular component keeps its template inside a .ts file; scan it as markup too.
+  const markup = MARKUP.has(ext) || (ext === ".ts" && /@Component\s*\(/.test(text) && /\btemplate\s*:/.test(text));
   const style = STYLE.has(ext);
 
   if (/@keyframes|\banimate-[a-z]|\btransition\b|\btransition-/.test(text)) hasAnimation = true;
@@ -117,7 +118,7 @@ for (const file of files) {
 
   for (const m of text.matchAll(tagRe("div|span|li|p|td|tr|section|article|img"))) {
     const a = m[2];
-    if (/\bon[Cc]lick\b|@click\b|on:click\b/.test(a) && !/\brole=|\btab[Ii]ndex\b|onKey(Down|Up|Press)/.test(a)) add("click-on-noninteractive", file, lineAt(text, m.index));
+    if (/\bon[Cc]lick\b|@click\b|on:click\b|\(click\)|v-on:click\b/.test(a) && !/\brole=|\btab[Ii]ndex\b|onKey(Down|Up|Press)|\(keydown|\(keyup|@keydown|@keyup|on:keydown|onkeydown/.test(a)) add("click-on-noninteractive", file, lineAt(text, m.index));
   }
 
   for (const m of text.matchAll(/<button\b((?:=>|[^>])*)>([\s\S]*?)<\/button>/g)) {

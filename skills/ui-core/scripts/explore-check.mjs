@@ -9,7 +9,7 @@ const i = process.argv.indexOf("--project");
 const project = path.resolve(i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : ".");
 const SKIP = new Set(["node_modules", ".git", "dist", "build", "out", ".next", ".nuxt", ".svelte-kit", "coverage", ".cache"]);
 const CODE = /\.(tsx?|jsx?|mjs|vue|svelte|astro|html|css|scss)$/;
-const MARKERS = /ExploreSlot|explore-slot|__explore__|data-ui-explore|\.drafts(\.|["'])/;
+const MARKERS = /ExploreSlot|explore-slot|ui-explore-slot|__explore__|data-ui-explore|\.drafts(\.|["'/])|\.current(\.component)?["'.]/;
 
 const files = [];
 const refs = [];
@@ -21,9 +21,9 @@ const refs = [];
     const rel = path.relative(project, full).replace(/\\/g, "/");
     if (e.isDirectory()) {
       if (SKIP.has(e.name)) continue;
-      if (e.name === "__explore__") { files.push(rel + "/"); continue; }
+      if (e.name === "__explore__" || /\.drafts$/.test(e.name)) { files.push(rel + "/"); continue; }
       walk(full);
-    } else if (/\.drafts\.\w+$/.test(e.name)) {
+    } else if (/\.drafts\.\w+$/.test(e.name) || /\.current\.(vue|svelte|component\.ts)$/.test(e.name)) {
       files.push(rel);
     } else if (CODE.test(e.name) && fs.statSync(full).size < 1_000_000) {
       fs.readFileSync(full, "utf8").split("\n").forEach((line, n) => {

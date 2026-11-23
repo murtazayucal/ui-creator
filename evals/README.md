@@ -49,3 +49,5 @@ claude plugin eval . --tag read-only --no-publish
 - `clean-app`: correct code; the scan should find nothing.
 - `shadcn-app`: shadcn configuration for `sources.mjs`.
 - `demo-shop`: a runnable Vite + React app for `explore` and browser verification (`npm install`, then `npm run dev`).
+- `vue-shop`, `svelte-shop`: the same shop in Vue 3 and Svelte 5 (Vite), for the explore adapters.
+- `angular-shop`: the same shop in Angular 21 with standalone components (`npm install`, then `npm start`). Angular 22 needs a newer Node than 22.20.

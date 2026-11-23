@@ -81,7 +81,9 @@ const server = http.createServer((req, res) => {
     if (action === "pick") {
       const p = m.picked ?? {};
       extra.picked = {
+        framework: ["react", "vue", "svelte", "angular"].includes(p.framework) ? p.framework : null,
         component: KEY.test(String(p.component ?? "")) ? p.component : null,
+        file: clean(p.file, 200) || null,
         instances: Number.isInteger(p.instances) ? p.instances : null,
         tag: clean(p.tag, 20),
         text: clean(p.text, 80),

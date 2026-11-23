@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "cli": { "analytics": false },
+  "projects": {
+    "app": {
+      "projectType": "application",
+      "root": "",
+      "sourceRoot": "src",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": { "browser": "src/main.ts", "index": "src/index.html", "tsConfig": "tsconfig.app.json", "styles": ["src/styles.css"], "outputPath": "dist" },
+          "configurations": { "development": { "optimization": false, "sourceMap": true, "extractLicenses": false } },
+          "defaultConfiguration": "development"
+        },
+        "serve": { "builder": "@angular/build:dev-server", "options": { "buildTarget": "app:build:development" } }
+      }
+    }
+  }
+}
