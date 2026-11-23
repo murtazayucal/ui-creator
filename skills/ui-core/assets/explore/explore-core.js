@@ -79,7 +79,7 @@ function view() {
   };
 }
 
-function refresh(name) {
+function refresh(name, tell = true) {
   const g = groups.get(name);
   if (!g) return;
   const s = stateOf(name);
@@ -91,6 +91,16 @@ function refresh(name) {
     }
     const badge = el.querySelector(":scope > [data-ui-explore-badge]");
     if (badge) {
+      // The bar already names the draft when everything shows the same one; the badge is for telling
+      // instances apart. On a small element it sits outside, so it never covers what is being judged.
+      badge.style.display = tell ? "" : "none";
+      // Small element: a smaller badge that rides just above it, inside its own box, so a scrolling
+      // container cannot clip it and it does not cover the content.
+      const small = el.offsetHeight < 48;
+      badge.style.top = small ? "-11px" : "-9px";
+      badge.style.left = small ? "0" : "8px";
+      badge.style.padding = small ? "0 4px" : "1px 6px";
+      badge.style.font = `600 ${small ? "9px/12px" : "11px/16px"} ${UI.mono}`;
       badge.textContent = key === "current" ? L.current : key;
       badge.style.background = key === "current" ? UI.raised : UI.accent;
       badge.style.color = key === "current" ? UI.text : UI.onAccent;
@@ -103,7 +113,12 @@ function refreshAll() {
   queued = true;
   queueMicrotask(() => {
     queued = false;
-    for (const name of groups.keys()) refresh(name);
+    const seen = new Set();
+    for (const name of groups.keys()) {
+      const s = stateOf(name);
+      s.els.forEach((_, i) => seen.add(s.keyAt(i)));
+    }
+    for (const name of groups.keys()) refresh(name, seen.size > 1);
     if (!groups.size) {
       bar?.destroy();
       bar = null;
@@ -204,11 +219,13 @@ function createBar() {
   document.body.append(el);
 
   // live: the listener server answers. listening: the agent is waiting for a click right now.
-  const ui = { live: false, listening: false, armed: false, sent: false, note: "", stopPick: null, last: null };
+  const ui = { live: false, listening: false, armed: false, closing: false, sent: false, note: "", stopPick: null, last: null };
   let armTimer = null;
+  let closeTimer = null;
   const disarm = () => {
     clearTimeout(armTimer);
-    ui.armed = false;
+    clearTimeout(closeTimer);
+    ui.armed = ui.closing = false;
   };
   // Every signal says what it is about: the components in scope and the draft each one shows.
   const about = (v) => v.targets.map((s) => ({ component: s.name, key: s.mixed ? null : s.shown }));
@@ -247,7 +264,7 @@ function createBar() {
     // ---- what you are looking at ----
     const state = !port ? null : !ui.live ? "off" : ui.listening ? "on" : ui.sent ? "busy" : "idle";
     const lead = make("span", { display: "inline-flex", alignItems: "center", gap: "7px", padding: "0 4px 0 6px", font: `600 12px/18px ${UI.mono}`, color: UI.text });
-    if (state) lead.append(make("span", { width: "7px", height: "7px", borderRadius: "50%", flex: "none", background: state === "on" ? UI.accent : state === "busy" ? UI.warn : UI.muted, boxShadow: state === "on" ? "0 0 0 3px rgb(200 240 49 / 0.18)" : "none" }, { "aria-hidden": "true" }));
+    if (state) lead.append(make("span", { width: "7px", height: "7px", borderRadius: "50%", flex: "none", background: state === "on" ? UI.accent : state === "busy" ? UI.warn : UI.muted, boxShadow: state === "on" ? `0 0 0 3px ${UI.glow}` : "none" }, { "aria-hidden": "true" }));
     if (v.names.length > 1) {
       // Several comparisons are open: one bar, and this says what a click applies to.
       const pickScope = make("select", { height: "28px", maxWidth: "190px", padding: "0 6px", borderRadius: "6px", border: `1px solid ${UI.line}`, background: UI.raised, color: UI.text, font: `600 12px/18px ${UI.mono}`, cursor: "pointer" }, { "data-ui-explore-action": "scope", "aria-label": L.all });
@@ -344,8 +361,30 @@ function createBar() {
 
     // ---- decide ----
     // Only what shows a draft can be saved, removed or applied; with several, each keeps its own key.
+    // Closing is always there: it ends the comparison for what is in scope and keeps the current design.
+    const closer = () => {
+      const what = v.targets.map((s) => s.name).join(", ");
+      el.append(make("span", DIVIDER));
+      const arm = () => {
+        if (ui.closing) return send({ action: "cancel" });
+        ui.closing = true;
+        closeTimer = setTimeout(() => {
+          ui.closing = false;
+          render();
+        }, 4000);
+        render();
+      };
+      el.append(
+        ui.closing
+          ? button(L.closeConfirm ?? "Click again to close", { background: UI.danger, color: UI.bg }, { "data-ui-explore-action": "close" }, arm)
+          : iconButton(`${L.closeCompare ?? "Close comparison"}: ${what}`, "close", {}, { "data-ui-explore-action": "close" }, arm)
+      );
+    };
     const chosen = v.mixed ? [] : v.targets.filter((s) => s.shown !== "current");
-    if (!chosen.length) return refocus();
+    if (!chosen.length) {
+      closer();
+      return refocus();
+    }
     const label = [...new Set(chosen.map((s) => s.shown))].join("+");
     const picks = chosen.map((s) => ({ component: s.name, key: s.shown }));
     el.append(make("span", DIVIDER));
@@ -367,6 +406,7 @@ function createBar() {
       }, 4000);
       render();
     }, ui.armed ? null : "check"));
+    closer();
     refocus();
   }
 
@@ -407,6 +447,7 @@ function createBar() {
     destroy() {
       clearInterval(timer);
       clearTimeout(armTimer);
+      clearTimeout(closeTimer);
       document.removeEventListener("keydown", onKey);
       ui.stopPick?.();
       el.remove();

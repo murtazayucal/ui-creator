@@ -4,6 +4,72 @@ A Claude Code plugin for improving the interface of an application that already 
 
 Status: early development, unpublished. All seven commands are written. `palette`, `audit` and `element` have been run as plugin commands; `explore` and the browser verification flow have been walked through by hand on a sample app; `page`, `overhaul` and `sources` have not been run as plugin commands yet.
 
+## See it work
+
+The screenshots below are from a small sample invoicing app (React, Tailwind). Nothing in them is a mock-up: each one is the running app with the explore bar on top.
+
+### Variations, live in your own app
+
+Ask for alternatives to a page or a component and they appear in the browser, wired to your real data and handlers. The bar at the bottom switches between your current design and each draft. Here one round was asked for with the note "more futuristic":
+
+| Current | Draft A: instrument panel |
+|---|---|
+| ![The current dashboard](docs/images/compare-current.jpg) | ![Draft A](docs/images/compare-a.jpg) |
+
+| Draft B: lit rails | Draft C: night panel |
+|---|---|
+| ![Draft B](docs/images/compare-b.jpg) | ![Draft C](docs/images/compare-c.jpg) |
+
+What a round gives you:
+
+- **Three or more drafts on one axis.** Each round varies one thing (layout, density, emphasis, a design language) and says which, so the drafts are comparable and not three unrelated redesigns.
+- **Steering in your own words.** Type a note such as "more futuristic" or "like B but with badges" and press New variations; the next round follows it.
+- **Your logic stays put.** Drafts receive the same props and handlers as the current component; state, data fetching and routing are not touched.
+- **No invented content.** Drafts rearrange and restyle what is there. They do not add fake charts, numbers or features.
+- **Checked, not just drawn.** Text contrast is measured, and the chosen draft is viewed with long text, missing data and at phone width before it is kept.
+
+### Compare on real rows
+
+A component that appears many times can show a different draft on each instance, so you compare them in place, next to each other, on real content. Here the invoice number cell shows the current version and three drafts down one column:
+
+![Drafts spread over the rows of a table](docs/images/compare-mixed.jpg)
+
+With several comparisons open there is still one bar. Its scope selector says what a click applies to: all of them together, or one component set apart ("page C, table A").
+
+### Design languages
+
+The Style window previews twelve design languages. Pick one, mix two, or describe your own in a sentence; the drafts come back in that language using your project's own colors.
+
+![The Style window with twelve design languages](docs/images/style-window.jpg)
+
+| Language | In short |
+|---|---|
+| Glassmorphism | Translucent frosted panels floating over a colorful or photographic background. |
+| Neumorphism | Soft shapes pressed out of, or into, a single-color surface. |
+| Claymorphism | Puffy, rounded, toy-like blocks with inner highlights. |
+| Neo-brutalism | Thick black outlines, hard offset shadows, flat loud colors. |
+| Minimal / flat | Mostly whitespace and type; hairlines where a line is needed, nothing decorative. |
+| Material | Paper-like surfaces at clear elevation levels, filled primary actions, tonal color. |
+| Bento grid | Content in rounded tiles of different sizes that lock into one grid. |
+| Editorial | Looks like a well-set magazine: serif headlines, rules, generous margins. |
+| Dark neon | Near-black surfaces with glowing accent lines and text. |
+| Soft pastel | Light tinted surfaces, big radii, gentle colored shadows. |
+| Corporate clean | Calm, dense, predictable: the look of dependable business software. |
+| Terminal / mono | Monospaced type, boxes drawn with lines, the feel of a console. |
+
+A style describes shape (surface, edge, depth, corners, type), not color. Where a style and an accessibility rule conflict, the rule wins and the style is adapted; styles that are known to be hard on contrast are marked in the window.
+
+### Everything from the browser
+
+With the local listener running you do not need to go back to the chat:
+
+- **Pick element:** click anything on the page to start a comparison for it. If the area holds other components, you choose on the page which of them to include.
+- **Phone view:** opens the current draft at 375px.
+- **Save:** keeps a draft in your personal library for other projects.
+- **Apply:** two clicks; the draft becomes the component and the temporary code is removed.
+- **Close:** ends a comparison and keeps your current design. The dock menu can close all of them at once, or start a comparison for the whole page.
+- **Settings:** the tool's own look (dark or light, four accent colors), kept in your browser.
+
 ## Commands
 
 | Command | What it does |

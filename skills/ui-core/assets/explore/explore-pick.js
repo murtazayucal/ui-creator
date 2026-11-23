@@ -4,16 +4,61 @@
 import { exploreConfig } from "./explore-config.js";
 
 const { port, token } = exploreConfig;
-const OWN = "[data-ui-explore-bar], [data-ui-explore-preview], [data-ui-explore-dock], [data-ui-explore-scope], [data-ui-explore-styles]";
+const OWN = "[data-ui-explore-bar], [data-ui-explore-preview], [data-ui-explore-dock], [data-ui-explore-scope], [data-ui-explore-styles], [data-ui-explore-menu]";
 
 // One look for everything the tool draws on the page, so it reads as an instrument laid over the app and
 // not as part of it: near-black panels, hairline edges, small radii, one accent color, mono for names.
+// The colors are CSS variables, so the user can change the tool's theme while it is on screen.
 export const UI = {
-  bg: "#0c0c0e", raised: "#1a1a1e", line: "#2e2e34", text: "#ececf1", muted: "#9a9aa5",
-  accent: "#c8f031", onAccent: "#0c0c0e", warn: "#ffc53d", danger: "#ff7a7a",
+  bg: "var(--uix-bg)", raised: "var(--uix-raised)", line: "var(--uix-line)", text: "var(--uix-text)", muted: "var(--uix-muted)",
+  accent: "var(--uix-accent)", onAccent: "var(--uix-onAccent)", warn: "var(--uix-warn)", danger: "var(--uix-danger)",
   font: "system-ui, sans-serif", mono: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
-  shadow: "0 10px 30px rgb(0 0 0 / 0.35), 0 0 0 1px rgb(255 255 255 / 0.04)",
+  shadow: "var(--uix-shadow)",
+  glow: "color-mix(in srgb, var(--uix-accent) 22%, transparent)",
 };
+// In the light theme the accent is a dark shade with white text on it, so it also works as text and as a dot.
+const THEMES = {
+  dark: { bg: "#0c0c0e", raised: "#1a1a1e", line: "#2e2e34", text: "#ececf1", muted: "#9a9aa5", onAccent: "#0c0c0e", warn: "#ffc53d", danger: "#ff7a7a", shadow: "0 10px 30px rgb(0 0 0 / 0.35), 0 0 0 1px rgb(255 255 255 / 0.04)" },
+  light: { bg: "#ffffff", raised: "#f0f0f3", line: "#d4d4dc", text: "#18181b", muted: "#5d5d68", onAccent: "#ffffff", warn: "#b45309", danger: "#c81e1e", shadow: "0 10px 30px rgb(0 0 0 / 0.16), 0 0 0 1px rgb(0 0 0 / 0.06)" },
+};
+export const ACCENTS = {
+  lime: { dark: "#c8f031", light: "#4d7c0f" },
+  sky: { dark: "#5cc8ff", light: "#0369a1" },
+  violet: { dark: "#b79cff", light: "#6d28d9" },
+  orange: { dark: "#ffa24a", light: "#c2410c" },
+};
+const PREFS_KEY = "ui-explore-prefs";
+const valid = (p) => ({ theme: THEMES[p?.theme] ? p.theme : "dark", accent: ACCENTS[p?.accent] ? p.accent : "lime" });
+/** The user's own settings for the tool (theme, accent). Kept in this browser only. */
+export function getPrefs() {
+  try {
+    return valid(JSON.parse(localStorage.getItem(PREFS_KEY) ?? "{}"));
+  } catch {
+    return valid({});
+  }
+}
+function paint(p) {
+  if (typeof document === "undefined") return;
+  let s = document.querySelector("style[data-ui-explore-theme]");
+  if (!s) {
+    s = document.createElement("style");
+    s.setAttribute("data-ui-explore-theme", "");
+    document.head.append(s);
+  }
+  const t = { ...THEMES[p.theme], accent: ACCENTS[p.accent][p.theme] };
+  s.textContent = `:root{${Object.entries(t).map(([k, v]) => `--uix-${k}:${v}`).join(";")}}`;
+}
+export function setPrefs(next) {
+  const p = valid({ ...getPrefs(), ...next });
+  try {
+    localStorage.setItem(PREFS_KEY, JSON.stringify(p));
+  } catch {
+    // Private mode: the choice holds until the page reloads.
+  }
+  paint(p);
+  return p;
+}
+paint(getPrefs());
 const ICONS = {
   phone: "M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z M11 18h2",
   save: "M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z",
@@ -23,6 +68,11 @@ const ICONS = {
   library: "M5 4v16 M10 4v16 M14 5l5 15",
   check: "M5 12l5 5 9-10",
   plus: "M12 5v14 M5 12h14",
+  close: "M6 6l12 12 M18 6L6 18",
+  menu: "M5 11.2v1.6 M12 11.2v1.6 M19 11.2v1.6",
+  page: "M4 5h16v14H4z M4 9h16",
+  sliders: "M4 7h10 M18 7h2 M4 17h4 M12 17h8 M16 5v4 M10 15v4",
+  back: "M15 6l-6 6 6 6",
 };
 /** A 16px line icon as an <svg> element. */
 export function icon(name) {

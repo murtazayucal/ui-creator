@@ -191,7 +191,14 @@ if (mode === "serve") {
             }
           : {}),
       });
-      if (action === "pick") event.picked = pickedOf(m.picked ?? {});
+      if (action === "pick") {
+        // From the dock menu: the whole page the user is on, not an element.
+        if (m.scope === "page") {
+          event.scope = "page";
+          event.path = clean(m.path, 200);
+        } else event.picked = pickedOf(m.picked ?? {});
+      }
+      if (action === "cancel" && m.scope === "all") event.scope = "all";
       if (action === "style") {
         // Ids from the style catalog; the agent looks them up, so anything that is not a plain id is dropped.
         event.styles = (Array.isArray(m.styles) ? m.styles : []).filter((s) => /^[a-z][a-z0-9-]{1,29}$/.test(String(s))).slice(0, 2);
