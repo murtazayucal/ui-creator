@@ -88,7 +88,10 @@ A style sets shape (surface, edge, depth, corners, type), not color. Where a sty
 With the local listener running you do not need to go back to the chat:
 
 - **Pick element:** click anything on the page to start a comparison for it. If the area holds other components, you choose on the page which of them to include.
-- **Phone view:** opens the current draft at 375px.
+- **Focus view:** shows one small element alone, enlarged on a dark backdrop, with its current design and every draft listed beside it. Click one to choose it.
+- **Fine-tune:** typeface (the project's own fonts and fifteen system families), text size, weight, corners and padding, applied in the browser as you move them, to every instance or to one. No request is made while you play; the result is written into the code once, when you apply.
+- **Narrow view:** a second copy of the page docked at the right edge. Drag its edge to scrub the width; the project's own breakpoints are one click away. It follows the bar as you switch drafts, marks what breaks at each width (content wider than the screen or spilling out of its box, cut text, tap targets under 24px) and hands that list over with one click. Click an element inside it to get variations for that width only, leaving the wide layout alone.
+- **New variations:** opens a small form: a note in your own words, or a design language.
 - **Save:** keeps a draft in your personal library for other projects.
 - **Apply:** two clicks; the draft becomes the component and the temporary code is removed.
 - **Close:** ends a comparison and keeps your current design. The dock menu can close all of them at once, or start a comparison for the whole page.

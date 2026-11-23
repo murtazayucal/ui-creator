@@ -169,9 +169,22 @@ if (mode === "serve") {
         event.targets = m.targets.slice(0, 8).filter((x) => KEY.test(String(x?.component ?? ""))).map((x) => ({
           component: x.component,
           key: x.key == null ? null : KEY.test(String(x.key)) ? String(x.key) : null,
+          // Fine-tuning the user did in the browser on that draft: numbers within set bounds, and a font stack.
+          ...(x.tweaks && typeof x.tweaks === "object"
+            ? {
+                tweaks: {
+                  font: clean(x.tweaks.font, 160).replace(/[^\w\s,'"-]/g, ""),
+                  size: Math.min(2, Math.max(0.5, Number(x.tweaks.size) || 1)),
+                  weight: Math.min(400, Math.max(-400, Math.round(Number(x.tweaks.weight) || 0))),
+                  radius: Math.min(3, Math.max(0, Number.isFinite(Number(x.tweaks.radius)) ? Number(x.tweaks.radius) : 1)),
+                  pad: Math.min(2, Math.max(0.3, Number(x.tweaks.pad) || 1)),
+                  // null: every instance of the component. A number: only that instance, counted from 0 in page order.
+                  only: Number.isInteger(x.tweaks.only) && x.tweaks.only >= 0 && x.tweaks.only < 200 ? x.tweaks.only : null,
+                },
+              }
+            : {}),
         }));
       }
-      if (action === "more") event.note = clean(m.note, 200);
       const pickedOf = (p) => ({
         framework: ["react", "vue", "svelte", "angular"].includes(p.framework) ? p.framework : null,
         component: KEY.test(String(p.component ?? "")) ? p.component : null,
@@ -192,6 +205,16 @@ if (mode === "serve") {
             }
           : {}),
       });
+      if (action === "more") event.note = clean(m.note, 200);
+      // Asked while the narrow view was open: the width in CSS pixels the user was looking at.
+      if ((action === "more" || action === "style" || action === "pick") && Number.isInteger(m.viewport) && m.viewport >= 200 && m.viewport <= 4000) event.viewport = m.viewport;
+      // Drafts for that width only; the wider layout is to stay as it is.
+      if ((action === "more" || action === "pick") && m.responsive === true && event.viewport) event.responsive = true;
+      // "Fix these" in the narrow view: what the tool found broken at that width.
+      if (action === "more" && m.fix === true && event.viewport && Array.isArray(m.issues)) {
+        event.fix = true;
+        event.issues = m.issues.slice(0, 8).filter((x) => ["overflow", "spill", "clipped", "tap"].includes(x?.kind)).map((x) => ({ kind: x.kind, ...pickedOf(x) }));
+      }
       if (action === "pick") {
         // From the dock menu: the whole page the user is on, not an element.
         if (m.scope === "page") {

@@ -5,7 +5,7 @@
 import { exploreConfig } from "./explore-config.js";
 
 const { port, token } = exploreConfig;
-const OWN = "[data-ui-explore-bar], [data-ui-explore-preview], [data-ui-explore-dock], [data-ui-explore-scope], [data-ui-explore-styles], [data-ui-explore-menu]";
+const OWN = "[data-ui-explore-bar], [data-ui-explore-preview], [data-ui-explore-dock], [data-ui-explore-scope], [data-ui-explore-styles], [data-ui-explore-menu], [data-ui-explore-focus], [data-ui-explore-tweak]";
 
 // One look for everything the tool draws on the page, so it reads as an instrument laid over the app and
 // not as part of it: near-black panels, hairline edges, small radii, one accent color, mono for names.
@@ -72,6 +72,7 @@ const ICONS = {
   check: "M5 12l5 5 9-10",
   plus: "M12 5v14 M5 12h14",
   close: "M6 6l12 12 M18 6L6 18",
+  focus: "M4 9V5h4 M20 9V5h-4 M4 15v4h4 M20 15v4h-4 M10 10h4v4h-4z",
   menu: "M5 11.2v1.6 M12 11.2v1.6 M19 11.2v1.6",
   page: "M4 5h16v14H4z M4 9h16",
   sliders: "M4 7h10 M18 7h2 M4 17h4 M12 17h8 M16 5v4 M10 15v4",
