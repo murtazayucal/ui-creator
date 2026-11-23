@@ -150,7 +150,8 @@ function createBar(name) {
   }, { "data-ui-explore-bar": name });
   document.body.append(el);
 
-  const ui = { live: false, armed: false, sent: false, note: "", stopPick: null, last: null };
+  // live: the listener server answers. listening: the agent is waiting for a click right now.
+  const ui = { live: false, listening: false, armed: false, sent: false, note: "", stopPick: null, last: null };
   let armTimer = null;
   const disarm = () => {
     clearTimeout(armTimer);
@@ -160,6 +161,7 @@ function createBar(name) {
     signal({ component: name, ...body })
       .then((ok) => {
         ui.sent = ok;
+        if (ok) ui.listening = false; // the click was handed to the agent; it is busy until it waits again
         render();
       })
       .catch(() => {
@@ -191,9 +193,12 @@ function createBar(name) {
     el.append(button(L.mobile, { background: "#1e293b" }, { "data-ui-explore-action": "preview" }, () => openPreview(s.mixed ? null : s.shown)));
     if (!port) return;
     el.append(make("span", DIVIDER));
-    if (ui.sent || !ui.live) {
-      const t = make("span", { ...HINT, color: ui.sent ? "#fde68a" : "#94a3b8" });
-      t.textContent = ui.sent ? L.sent : L.offline;
+    if (!ui.live || !ui.listening) {
+      // Server down: buttons are off. Server up but the agent is not waiting: it is handling a click
+      // (ours, if we just sent one) or no session is attached.
+      const working = ui.live && ui.sent;
+      const t = make("span", { ...HINT, color: working ? "#fde68a" : "#94a3b8" });
+      t.textContent = !ui.live ? L.offline : working ? L.sent : L.busy;
       return void el.append(t);
     }
     const isDraft = !s.mixed && s.shown !== "current";
@@ -252,11 +257,12 @@ function createBar(name) {
   }
 
   const check = () =>
-    ping().then((ok) => {
-      const changed = ok !== ui.live;
-      // A listener that is reachable again means the last request was handled.
-      if (ok && !ui.live) ui.sent = false;
-      ui.live = ok;
+    ping().then(({ up, listening }) => {
+      const changed = up !== ui.live || listening !== ui.listening;
+      // The agent waiting again means the last request was handled.
+      if (listening && !ui.listening) ui.sent = false;
+      ui.live = up;
+      ui.listening = listening;
       if (changed) render();
     });
   const timer = port ? setInterval(check, 4000) : null;

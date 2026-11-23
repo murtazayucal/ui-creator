@@ -15,7 +15,7 @@ Status: early development, unpublished. All seven commands are written. `palette
 | `/ui-creator:page <route>` | Improves one page. |
 | `/ui-creator:library` | Saves designs you like to a personal library outside the project and reuses them in other projects. |
 | `/ui-creator:overhaul` | Reworks the whole app in phases, stopping for approval. |
-| `/ui-creator:explore <element>` | Shows layout alternatives for one element live in the browser, side by side, and applies the one you pick. A bar in the page switches drafts, opens a phone view, and (with a local listener) removes, requests, saves and applies drafts without typing in chat. Comparisons work on React, Vue 3, Svelte 5 and Angular (standalone components); the element picker dock works on any framework with a module bundler. |
+| `/ui-creator:explore <element>` | Shows layout alternatives for one element live in the browser, side by side, and applies the one you pick. A bar in the page switches drafts, opens a phone view, and (with a local listener) removes, requests, saves and applies drafts without typing in chat. Comparisons work on React 16.8+ (including Next.js), Angular 12+ (NgModule or standalone), Vue 2.6+ and Svelte 3+; the element picker dock works on any framework with a module bundler. While a comparison is open, a local commit check keeps the temporary code out of your history. |
 
 The `ui-core` skill loads automatically for UI work and holds the rules, data and scripts the commands share.
 

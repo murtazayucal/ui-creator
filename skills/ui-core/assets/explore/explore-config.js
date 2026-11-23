@@ -20,6 +20,7 @@ export const exploreConfig = {
     apply: "Apply",
     confirm: "Click again to apply",
     sent: "Sent, working…",
+    busy: "Claude is busy or not listening",
     offline: "Buttons are off: answer in chat",
   },
 };

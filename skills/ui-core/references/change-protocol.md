@@ -4,7 +4,7 @@ The steps every command that edits UI follows. `<core>` is this skill's folder.
 
 ## Before editing
 
-0. **Unfinished comparison.** Run `node <core>/scripts/explore-check.mjs --project <project>`. If it reports `pending`, an explore comparison is open and temporary code is in the project. Tell the user and ask whether to finish it, discard it, or work around it. Do not edit a component that has drafts waiting, and do not let the project be committed in that state without saying so.
+0. **Unfinished comparison.** Run `node <core>/scripts/explore-check.mjs --project <project>`. If it reports `pending`, an explore comparison is open and temporary code is in the project. Tell the user and ask whether to finish it, discard it, or work around it. Do not edit a component that has drafts waiting. `explore-guard.mjs` blocks commits in that state; if `explore-guard.mjs status` shows no hook, warn the user before any commit.
 1. **Base to compare against.** Run `git status`. If there are uncommitted changes, ask the user to commit or stash them first; `check-diff.mjs` needs a clean base. If the project is not a git repository, say that the logic check cannot run and ask whether to continue without it.
 2. **Stack.** `node <core>/scripts/detect-stack.mjs <project>`. The framework, styling approach and component library stay as they are.
 3. **Design record.** Read `design-system/MASTER.md` and, for a page, `design-system/pages/<page>.md`. If there is no record, create one from `<core>/assets/MASTER.template.md` when the first decision is made; fill only what you know and leave the rest empty.

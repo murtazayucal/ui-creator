@@ -32,16 +32,17 @@ function mount() {
   dock.append(pick, library, status);
   document.body.append(dock);
 
-  let live = false;
+  let live = false; // the listener server answers
+  let listening = false; // the agent is waiting for a click right now
   let sent = false;
   let stopPick = null;
 
   const render = () => {
-    const on = live && !sent;
+    const on = live && listening;
     pick.style.display = library.style.display = on ? "" : "none";
     status.style.display = on ? "none" : "";
-    status.style.color = sent ? "#fde68a" : "#94a3b8";
-    status.textContent = sent ? L.sent : L.offline;
+    status.style.color = live && sent ? "#fde68a" : "#94a3b8";
+    status.textContent = !live ? L.offline : sent ? L.sent : L.busy;
     pick.textContent = stopPick ? L.picking : L.pick;
     pick.style.background = stopPick ? "#e11d48" : "#334155";
     library.textContent = L.library;
@@ -50,6 +51,7 @@ function mount() {
     signal({ component: "dock", ...body })
       .then((ok) => {
         sent = ok;
+        if (ok) listening = false;
         render();
       })
       .catch(() => {
@@ -78,10 +80,11 @@ function mount() {
   library.addEventListener("click", () => send({ action: "library" }));
 
   const check = () =>
-    ping().then((ok) => {
-      // A listener that is reachable again means the last request was handled and a new one can be sent.
-      if (ok && !live) sent = false;
-      live = ok;
+    ping().then((p) => {
+      // The agent waiting again means the last request was handled.
+      if (p.listening && !listening) sent = false;
+      live = p.up;
+      listening = p.listening;
       render();
     });
   check();

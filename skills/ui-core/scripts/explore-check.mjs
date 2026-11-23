@@ -9,7 +9,8 @@ const i = process.argv.indexOf("--project");
 const project = path.resolve(i >= 0 && process.argv[i + 1] ? process.argv[i + 1] : ".");
 const SKIP = new Set(["node_modules", ".git", "dist", "build", "out", ".next", ".nuxt", ".svelte-kit", "coverage", ".cache"]);
 const CODE = /\.(tsx?|jsx?|mjs|vue|svelte|astro|html|css|scss)$/;
-const MARKERS = /ExploreSlot|explore-slot|ui-explore-slot|__explore__|data-ui-explore|\.drafts(\.|["'/])|\.current(\.component)?["'.]/;
+// Narrow on purpose: ordinary code has `ref.current.focus()` and `state.drafts.map(...)`.
+const MARKERS = /ExploreSlot|explore-slot|ui-explore-slot|explore-dock|__explore__|data-ui-explore|\.drafts["'/]|\.drafts\.(jsx?|tsx?|vue|svelte)\b|\.current\.(vue|svelte|component)\b/;
 
 const files = [];
 const refs = [];
