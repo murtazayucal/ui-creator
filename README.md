@@ -136,6 +136,24 @@ To try a local checkout without installing:
 claude --plugin-dir /path/to/ui-creator
 ```
 
+## Staying up to date
+
+Claude Code can update the plugin for you, but for a marketplace added from GitHub this is off until you turn it on:
+
+1. Run `/plugin` and open the **Marketplaces** tab.
+2. Select `ui-creator` and turn auto-update on.
+
+From then on Claude Code checks at the start of a session and tells you when a new version has been installed.
+
+To update by hand instead, in your shell:
+
+```
+claude plugin marketplace update ui-creator
+claude plugin update ui-creator@ui-creator
+```
+
+The plugin never checks for updates by itself. What changed in each version is in the [changelog](CHANGELOG.md).
+
 ## What it keeps in your project
 
 - `design-system/MASTER.md`: the design record every command reads first, with the decisions made and the options not chosen.
