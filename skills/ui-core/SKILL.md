@@ -48,6 +48,7 @@ Zero-dependency Node scripts in `scripts/`, run as `node "<skill folder>/scripts
 | Script | Purpose | Status |
 |---|---|---|
 | `palette.mjs --domain <d>` | Query 275 contrast-checked palettes by domain, mode, hue or chroma; `--id` for one in full | ready |
+| `style.mjs [--id <a,b>]` | Catalog of 12 design languages (glassmorphism, neo-brutalism, bento...): shape rules, needs, risks and known mixes | ready |
 | `contrast.mjs <fg> <bg> [...]` | WCAG 2.2 contrast for color pairs (hex, oklch, hsl, rgb) | ready |
 | `detect-stack.mjs [project]` | Report framework, styling approach, component library and token files | ready |
 | `audit.mjs [path]` | Static scan for accessibility, state, consistency and copy issues, sorted by severity | ready |

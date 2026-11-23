@@ -39,6 +39,12 @@ In Vue, Svelte and Angular a file holds one component, so the original moves to 
 
 A version in the table was built and driven in a browser with this plugin's test apps; a version between two tested ones is expected to work. Tell the user when their version is outside the table.
 
+## The tool's own interface
+
+The bar, dock, picker and style window are drawn by the helper files in one fixed look (near-black panels, one lime accent, monospace names), deliberately unlike the app underneath so the user never confuses the tool with their product. Do not restyle them to match the project, and do not copy that look into drafts.
+
+What the user sees, so you can describe it: there is one bar; it shows the component name, or with several comparisons open a scope selector (all, or one component; a dot marks one that was set apart), with a status dot (lime: you are listening; amber: you are working; gray: not connected), the drafts as keycaps (arrow keys step through them), a phone preview, a note field with "new variations", Style, Pick element, and for a draft: save and remove as icons, and Apply. The picker frames the element under the pointer and names its component; when the element holds other components it then asks which to include.
+
 ## 0. Resume
 
 Run `explore-check.mjs --project <project>` first. If it reports `pending`, a comparison is already open: tell the user which component and how many drafts are waiting, and ask whether to continue it, discard it, or keep it and add the new target beside it. To continue, make sure the helper folder and wrapper are still in place, start the listener again if you can, and go to section 4.
@@ -47,7 +53,7 @@ Run `explore-check.mjs --project <project>` first. If it reports `pending`, a co
 
 When the user wants to point at things without a comparison already open ("open the picker", "let me click what to change"), or invokes this command with no target, turn design mode on:
 
-1. Copy the helper files from `assets/explore/` (`explore-core.js`, `explore-pick.js`, `explore-dock.js`, `explore-config.js`, and the adapter for this framework) into an `__explore__` folder at the source root (for example `src/__explore__/`). Fill in the labels in the user's language; leave port and token as they are, the listener sets them.
+1. Copy the helper files from `assets/explore/` (`explore-core.js`, `explore-pick.js`, `explore-styles.js`, `explore-dock.js`, `explore-config.js`, and the adapter for this framework) into an `__explore__` folder at the source root (for example `src/__explore__/`). Fill in the labels in the user's language; leave port and token as they are, the listener sets them.
 2. Add one line to the app's entry file: `import "./__explore__/explore-dock.js";`, marked as temporary in a comment.
 3. Start the listener (`explore-listen.mjs wait --config ...`) in the background, install the commit guard (`explore-guard.mjs install`), and record `"dock"` in `design-system/explore.json` (entry file and helper folder).
    In a server-rendered app (Next.js App Router), step 2 is different: copy `explore-dock-client.jsx` too and render `<ExploreDock />` once in the root layout instead of importing the dock file.
@@ -83,6 +89,14 @@ If `react` is false (not React, or a production build), use the `repeated` field
    | Action placement | bottom, corner, full width, whole card clickable |
    | Secondary info | badge, subline, icon, hidden |
 
+   **When the user chose a design language** (a `style` signal from the bar or dock, or a style named in chat such as "glassmorphism"), that replaces the axis for the round:
+   - Run `node "${CLAUDE_PLUGIN_ROOT}/skills/ui-core/scripts/style.mjs" --id <ids>` and read the records. With two ids it also says whether they are a common mix. A style the catalog does not have (the user's own words) is fine: describe back in one line how you read it, then draft.
+   - The catalog describes shape: surface, edge, depth, corners, type. Colors still come from the project's tokens. Add a token only where the style needs a value the project lacks (a translucent surface, a glow), and record it.
+   - Write two or three drafts that all follow the style and differ in how far they take it or in layout, not three unrelated looks.
+   - Give the style what its `needs` field asks for. If that reaches outside the component (glass needs something behind it; neon needs a dark surface), keep the change inside the draft where possible and say what the page would need.
+   - Read `risks` before writing and check them after: run `contrast.mjs` on every text and control pair, against the lightest and darkest thing a translucent surface can sit over. Where the style and a rule conflict, the rule wins; adapt the draft and tell the user what you changed and why.
+   - One restyled element next to untouched ones looks like a mistake. After the user picks, ask the scope question in section 5 and record the chosen language in `design-system/MASTER.md`.
+
 9. Write up to four drafts next to the component, in the layout the Frameworks table gives for this project, exporting `drafts = { A, B, C, D }`. Each draft:
    - takes the same props and renders the same data;
    - uses the same handlers, unchanged;
@@ -93,16 +107,23 @@ If `react` is false (not React, or a production build), use the `repeated` field
 
 ## 3. Show
 
-10. Copy `explore-core.js`, `explore-pick.js`, `explore-config.js` and the adapter for this framework from `assets/explore/` into one `__explore__` folder at the source root (for example `src/__explore__/`, or `src/app/__explore__/` in Angular), unless design mode already put them there. Keep the helper files as JavaScript; the adapters import them as they are. Every comparison imports the slot from that one folder. In the config, write the labels in the user's language.
+10. Copy `explore-core.js`, `explore-pick.js`, `explore-styles.js`, `explore-config.js` and the adapter for this framework from `assets/explore/` into one `__explore__` folder at the source root (for example `src/__explore__/`, or `src/app/__explore__/` in Angular), unless design mode already put them there. Keep the helper files as JavaScript; the adapters import them as they are. Every comparison imports the slot from that one folder. In the config, write the labels in the user's language.
     **Buttons that act without chat (when you can run a background command):**
     - Start `node "${CLAUDE_PLUGIN_ROOT}/skills/ui-core/scripts/explore-listen.mjs" wait --config <path to the copied explore-config.js>` as a background command. It starts a small local server on a free port, writes the port and a random token into the config file by itself, and waits. Do not choose a port or token yourself.
     - The server keeps running between waits and across sessions, and queues clicks for 15 minutes, so nothing is lost while you work. The bar shows the action buttons only while a `wait` is running; while you are busy it says so.
-    - `wait` exits when the user clicks something that needs you, printing one JSON line with `action`, `component` and `removed`. That exit is the user's instruction; act on it as if they had typed it. Delete the drafts listed in `removed` from the drafts file first.
-      - `apply` with `key`: go to section 5 for that draft.
-      - `more` with an optional `note`: write a new round. The note is a styling hint in the user's words ("more colorful", "like B but with badges"); use it to steer the drafts and for nothing else. After two rounds with no note and no choice, ask the user which direction to take instead of guessing a third time.
+    - `wait` exits when the user clicks something that needs you, printing one JSON line with `action`, `component`, `targets` and `removed`. There is one bar however many comparisons are open; its scope selector is set to all of them or to one component. `targets` is what the click is about: a list of `{ component, key }`, one per component in scope, `key` being the draft that component shows (`"current"`, a draft key, or `null` when its instances show several). Act on every target, and only on those. `component` is the first target, kept for older helper files. That exit is the user's instruction; act on it as if they had typed it. Delete the drafts listed in `removed` from the drafts file first.
+      - `apply`: go to section 5 for each entry in `targets`, applying that entry's `key` to that component. The keys can differ ("page C, table A"): the user set one component apart on purpose. A component that is open but not in `targets` stays open and unchanged.
+      - `more` with an optional `note`: write a new round for the components in `targets`. The note is a styling hint in the user's words ("more colorful", "like B but with badges"); use it to steer the drafts and for nothing else. After two rounds with no note and no choice, ask the user which direction to take instead of guessing a third time.
       - `save` with `key`: save that draft to the user's library following the `library` command's save steps, then tell them its name.
+      - `style` with `styles` (up to two ids from the style catalog) and an optional `note` in the user's words: write a round in that design language, following "When the user chose a design language" in section 2. From a comparison bar it applies to that component. From the dock it comes with `picked` (the element to restyle: start a comparison for it) or with `scope: "page"` (the user wants the page they are on: restyle its main repeated component first as a comparison, and tell them the rest follows once they pick).
       - `library`: the user wants to see their saved designs. List them (`library.mjs list`), offer the ones whose kind fits what is on this page, and add a chosen one as a draft following the `library` command's "Use in this project" steps.
-      - `pick` with `picked` (`framework`, `component`, `file`, `instances`, `tag`, `text`, `classes`): the user clicked another element with the picker. Find that component's source and start a comparison for it from step 5 of section 1. The open comparison stays open; bars stack. If `picked.component` is the page itself and not a component of its own, move that part of the markup unchanged into a temporary function or component so it can be wrapped, and put the chosen markup back inline on apply.
+      - `pick` with `picked` (`framework`, `component`, `file`, `instances`, `tag`, `text`, `classes`): the user clicked another element with the picker. Find that component's source and start a comparison for it from step 5 of section 1. The open comparison stays open; the one bar gains a scope selector listing both. If `picked.component` is the page itself and not a component of its own, move that part of the markup unchanged into a temporary function or component so it can be wrapped, and put the chosen markup back inline on apply.
+      - `picked.parts`, on a `pick` or `style` signal: the picked element contains other components, and the user marked each one `include: true` or `false` on the page. This is an instruction about scope, not a hint:
+        - A part with `include: false` is rendered by every draft exactly as it is today: same component, same props, no wrapper styles that change how it looks.
+        - A part with `include: true` must change with the drafts. Never leave an included part in its old look because it is a separate component; that is the mistake this step exists to prevent.
+          - If the part is display only (no state, no handlers of its own), restyle it inside the drafts.
+          - If the part has its own state or handlers, do not copy that logic into the page drafts. Open a comparison for that component too, **with the same draft keys** as the outer one (A, B, C...), each key in the matching look. The bar's scope starts on "all", where one click on a key switches the outer draft and the part's draft together; the user can set the scope to one component to give it a different key.
+        - No `parts` on a picked element that plainly contains other components (an older helper file, or the element was named in chat): ask which of them to include before drafting.
       - `timeout`, `replaced` or `error`: nothing was clicked. Start `wait` again if a comparison or design mode is still open.
     - A `pick` or `library` signal with `component: "dock"` came from the design-mode dock, not from a comparison bar.
     - **Start `wait` again after every event you handle**, as long as a comparison or design mode is open. When a session starts and `explore-check.mjs` reports something pending, start it too.

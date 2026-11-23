@@ -6,9 +6,9 @@
 //   node explore-guard.mjs status  --project <path>
 //
 // install does two things, both local to this clone and neither tracked by git:
-//   1. adds the temporary files to .git/info/exclude, so `git add -A` does not pick them up;
+//   1. adds the helper folder and the session record to .git/info/exclude, so `git add -A` skips them;
 //   2. adds a pre-commit check that refuses a commit whose staged changes still refer to the explore
-//      helpers (the wrapper around a component, the dock import in the entry file).
+//      helpers (the wrapper around a component, the dock import in the entry file) or that stage a draft file.
 // The check is plain shell and needs nothing installed. `git commit --no-verify` skips it.
 // If the project keeps its hooks in a tracked folder (husky and similar), the hook is not installed,
 // because that would change a file the team shares; the exclude entries still are, and the result says so.
@@ -24,14 +24,18 @@ const git = (...args) => execFileSync("git", args, { cwd: project, encoding: "ut
 
 const BEGIN = "# >>> ui-creator explore guard >>>";
 const END = "# <<< ui-creator explore guard <<<";
-const EXCLUDES = ["__explore__/", "*.drafts.*", "*.drafts/", "*.current.vue", "*.current.svelte", "*.current.component.ts", "design-system/explore.json"];
+// Only the helper folder and the session record are hidden from git. Draft files are NOT listed here:
+// Tailwind 4 (and other tools that find sources through git's ignore rules) skip ignored files, so an
+// ignored draft renders without its classes. Drafts are kept out of commits by the check below instead.
+const EXCLUDES = ["__explore__/", "design-system/explore.json"];
+const DRAFT_FILES = "(\\.drafts[./]|\\.current\\.(vue|svelte|component\\.ts)$)";
 // What a staged change must not add while a comparison is open.
 // Narrow on purpose: ordinary code has `ref.current.focus()` and `state.drafts.map(...)`, which must pass.
 const PATTERN = "__explore__/|explore-slot|ExploreSlot|ui-explore-slot|explore-dock|\\.drafts[\\\"'/]|\\.drafts\\.(jsx?|tsx?|vue|svelte)|\\.current\\.(vue|svelte|component)";
 
 const HOOK = `${BEGIN}
 # Added by the ui-creator plugin while an explore comparison is open. Removed when it is closed.
-if git diff --cached -U0 --no-color | grep -E '^\\+[^+]' | grep -Eq "${PATTERN}"; then
+if git diff --cached -U0 --no-color | grep -E '^\\+[^+]' | grep -Eq "${PATTERN}" || git diff --cached --name-only --diff-filter=AM | grep -Eq "${DRAFT_FILES}"; then
   echo "ui-creator: this commit still contains temporary explore code (a comparison or design mode is open)." >&2
   echo "Finish or discard the comparison first, or commit with --no-verify to override." >&2
   git diff --cached --name-only | sed 's/^/  staged: /' >&2

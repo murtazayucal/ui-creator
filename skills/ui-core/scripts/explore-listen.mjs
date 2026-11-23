@@ -80,7 +80,7 @@ if (mode === "serve") {
   const port = cfg.port;
   const token = cfg.token;
   const KEY = /^[\w-]{1,24}$/;
-  const ACTIONS = ["apply", "more", "save", "pick", "library", "cancel"];
+  const ACTIONS = ["apply", "more", "save", "pick", "library", "style", "cancel"];
   const clean = (s, max) => String(s ?? "").replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, max);
   const TTL = 15 * 60_000;
   const IDLE = 12 * 60 * 60_000;
@@ -145,7 +145,7 @@ if (mode === "serve") {
     let body = "";
     req.on("data", (c) => {
       body += c;
-      if (body.length > 4096) req.destroy();
+      if (body.length > 8192) req.destroy();
     });
     req.on("end", () => {
       let m;
@@ -162,18 +162,43 @@ if (mode === "serve") {
       }
       const event = { action, component, at: new Date().toISOString() };
       if (action === "apply" || action === "save") event.key = key;
+      // One bar serves every open comparison: targets lists the components this click is about and the
+      // draft each one shows (null: several drafts spread over its instances).
+      if (Array.isArray(m.targets)) {
+        event.targets = m.targets.slice(0, 8).filter((x) => KEY.test(String(x?.component ?? ""))).map((x) => ({
+          component: x.component,
+          key: x.key == null ? null : KEY.test(String(x.key)) ? String(x.key) : null,
+        }));
+      }
       if (action === "more") event.note = clean(m.note, 200);
-      if (action === "pick") {
-        const p = m.picked ?? {};
-        event.picked = {
-          framework: ["react", "vue", "svelte", "angular"].includes(p.framework) ? p.framework : null,
-          component: KEY.test(String(p.component ?? "")) ? p.component : null,
-          file: clean(p.file, 200) || null,
-          instances: Number.isInteger(p.instances) ? p.instances : null,
-          tag: clean(p.tag, 20),
-          text: clean(p.text, 80),
-          classes: clean(p.classes, 160),
-        };
+      const pickedOf = (p) => ({
+        framework: ["react", "vue", "svelte", "angular"].includes(p.framework) ? p.framework : null,
+        component: KEY.test(String(p.component ?? "")) ? p.component : null,
+        file: clean(p.file, 200) || null,
+        instances: Number.isInteger(p.instances) ? p.instances : null,
+        tag: clean(p.tag, 20),
+        text: clean(p.text, 80),
+        classes: clean(p.classes, 160),
+        // Components inside the picked element, and whether the user wants them restyled with it.
+        ...(Array.isArray(p.parts) && p.parts.length
+          ? {
+              parts: p.parts.slice(0, 8).filter((x) => KEY.test(String(x?.component ?? ""))).map((x) => ({
+                component: x.component,
+                file: clean(x.file, 200) || null,
+                instances: Number.isInteger(x.instances) ? x.instances : null,
+                include: x.include !== false,
+              })),
+            }
+          : {}),
+      });
+      if (action === "pick") event.picked = pickedOf(m.picked ?? {});
+      if (action === "style") {
+        // Ids from the style catalog; the agent looks them up, so anything that is not a plain id is dropped.
+        event.styles = (Array.isArray(m.styles) ? m.styles : []).filter((s) => /^[a-z][a-z0-9-]{1,29}$/.test(String(s))).slice(0, 2);
+        event.note = clean(m.note, 200);
+        if (!event.styles.length && !event.note) return send(400, { ok: false, error: "no style" });
+        if (m.scope === "page") event.scope = "page";
+        else if (m.picked) event.picked = pickedOf(m.picked);
       }
       queue.push({ event, at: Date.now() });
       send(200, { ok: true, listening: !!waiter });

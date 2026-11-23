@@ -4,7 +4,44 @@
 import { exploreConfig } from "./explore-config.js";
 
 const { port, token } = exploreConfig;
-const OWN = "[data-ui-explore-bar], [data-ui-explore-preview], [data-ui-explore-dock]";
+const OWN = "[data-ui-explore-bar], [data-ui-explore-preview], [data-ui-explore-dock], [data-ui-explore-scope], [data-ui-explore-styles]";
+
+// One look for everything the tool draws on the page, so it reads as an instrument laid over the app and
+// not as part of it: near-black panels, hairline edges, small radii, one accent color, mono for names.
+export const UI = {
+  bg: "#0c0c0e", raised: "#1a1a1e", line: "#2e2e34", text: "#ececf1", muted: "#9a9aa5",
+  accent: "#c8f031", onAccent: "#0c0c0e", warn: "#ffc53d", danger: "#ff7a7a",
+  font: "system-ui, sans-serif", mono: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace",
+  shadow: "0 10px 30px rgb(0 0 0 / 0.35), 0 0 0 1px rgb(255 255 255 / 0.04)",
+};
+const ICONS = {
+  phone: "M8 3h8a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z M11 18h2",
+  save: "M7 4h10a1 1 0 0 1 1 1v15l-6-4-6 4V5a1 1 0 0 1 1-1z",
+  trash: "M5 7h14 M10 7V4h4v3 M7 7l1 13h8l1-13",
+  target: "M12 3v4 M12 17v4 M3 12h4 M17 12h4 M12 9a3 3 0 1 0 0 6a3 3 0 0 0 0-6z",
+  style: "M12 3l2.2 5.3L20 9l-4.4 3.8L17 19l-5-3-5 3 1.4-6.2L4 9l5.8-.7z",
+  library: "M5 4v16 M10 4v16 M14 5l5 15",
+  check: "M5 12l5 5 9-10",
+  plus: "M12 5v14 M5 12h14",
+};
+/** A 16px line icon as an <svg> element. */
+export function icon(name) {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  for (const [k, v] of Object.entries({ viewBox: "0 0 24 24", width: "16", height: "16", fill: "none", stroke: "currentColor", "stroke-width": "2", "stroke-linecap": "round", "stroke-linejoin": "round", "aria-hidden": "true" })) svg.setAttribute(k, v);
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute("d", ICONS[name] ?? "");
+  svg.append(path);
+  svg.style.flex = "none";
+  return svg;
+}
+const T = {
+  scopeTitle: "Inside this element",
+  scopeHint: "Click a part on the page or below to leave it out",
+  scopeGo: "Continue",
+  scopeCancel: "Cancel",
+  scopeOut: "left out",
+  ...exploreConfig.labels,
+};
 // The comparison's own wrappers are skipped so the component underneath is reported.
 const HELPERS = new Set(["ExploreSlot", "ExploreSlotLegacy", "ExploreSlotInner", "ExploreSlotComponent", "ExploreDock"]);
 
@@ -120,22 +157,175 @@ export function describe(el) {
 // For checking the picker by hand from the browser console.
 if (typeof window !== "undefined") window.__uiExploreDescribe = describe;
 
+// Components rendered inside `el` other than the one that owns it: [{ name, file, els }], els being the
+// outermost element of each instance. This is what the user can leave out of a restyle.
+function partsOf(el) {
+  const self = ownerOf(el)?.id ?? null;
+  const groups = new Map();
+  for (const n of [...el.querySelectorAll("*")].slice(0, 4000)) {
+    if (n.closest(OWN) || n.hasAttribute("data-ui-explore-badge")) continue;
+    const o = ownerOf(n);
+    if (!o?.id || !o.name || o.id === self) continue;
+    const parent = n.parentElement && ownerOf(n.parentElement);
+    if (parent?.id === o.id) continue; // not the outermost element of this instance
+    // A wrapper element the comparison adds belongs to no instance of its own.
+    if (n.hasAttribute("data-ui-explore")) continue;
+    // Icons and other small presentational helpers are not worth a decision.
+    const r = n.getBoundingClientRect();
+    if (r.width < 48 || r.height < 48) continue;
+    const key = o.framework === "angular" ? o.tag : o.name;
+    if (!groups.has(key)) groups.set(key, { name: o.name, file: o.file ?? null, els: [] });
+    groups.get(key).els.push(n);
+  }
+  return [...groups.values()].slice(0, 8);
+}
+
+function box(style, attrs = {}) {
+  const d = document.createElement("div");
+  Object.assign(d.style, style);
+  for (const [k, v] of Object.entries(attrs)) d.setAttribute(k, v);
+  return d;
+}
+
+// After a click on an element that contains other components: the user says which of them the restyle
+// may touch, by clicking them on the page itself or in the panel. Calls done(parts) or cancel().
+function chooseParts(el, parts, done, cancel) {
+  const state = parts.map(() => true);
+  const layer = box({ position: "fixed", inset: "0", zIndex: "2147483100", pointerEvents: "none" }, { "data-ui-explore-scope": "" });
+  const frame = box({ position: "fixed", border: `2px solid ${UI.accent}`, borderRadius: "6px", pointerEvents: "none" });
+  layer.append(frame);
+  const veils = parts.flatMap((p, i) =>
+    p.els.map((target) => {
+      const v = document.createElement("button");
+      v.type = "button";
+      Object.assign(v.style, { position: "fixed", padding: "0", margin: "0", border: "0", borderRadius: "6px", cursor: "pointer", pointerEvents: "auto", background: "transparent", font: `600 11px/16px ${UI.mono}`, textAlign: "left" });
+      const tag = box({ position: "absolute", left: "6px", top: "6px", display: "inline-flex", alignItems: "center", gap: "4px", padding: "2px 7px", borderRadius: "4px", whiteSpace: "nowrap" });
+      v.append(tag);
+      v.addEventListener("click", () => toggle(i));
+      layer.append(v);
+      return { i, target, v, tag };
+    })
+  );
+
+  const panel = box({ position: "fixed", left: "0", right: "0", bottom: "16px", margin: "0 auto", width: "fit-content", maxWidth: "calc(100vw - 24px)", boxSizing: "border-box", display: "grid", gap: "10px", padding: "12px 14px", borderRadius: "12px", pointerEvents: "auto", background: UI.bg, color: UI.text, border: `1px solid ${UI.line}`, boxShadow: UI.shadow, font: `400 13px/18px ${UI.font}` }, { role: "dialog", "aria-label": T.scopeTitle });
+  const head = box({ display: "grid", gap: "1px" });
+  const title = box({ font: `600 13px/18px ${UI.font}` });
+  title.textContent = T.scopeTitle;
+  const hint = box({ color: UI.muted, font: `400 12px/16px ${UI.font}` });
+  hint.textContent = T.scopeHint;
+  head.append(title, hint);
+  const row = box({ display: "flex", flexWrap: "wrap", alignItems: "center", gap: "6px" });
+  const chips = parts.map((p, i) => {
+    const c = document.createElement("button");
+    c.type = "button";
+    c.setAttribute("role", "switch");
+    Object.assign(c.style, { display: "inline-flex", alignItems: "center", gap: "6px", height: "30px", padding: "0 10px", borderRadius: "8px", cursor: "pointer", font: `600 12px/16px ${UI.mono}`, whiteSpace: "nowrap" });
+    c.addEventListener("click", () => toggle(i));
+    row.append(c);
+    return c;
+  });
+  const spacer = box({ flex: "1 1 12px" });
+  const mk = (label, primary, fn) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = label;
+    Object.assign(b.style, { height: "30px", padding: "0 14px", borderRadius: "8px", cursor: "pointer", font: `600 13px/18px ${UI.font}`, whiteSpace: "nowrap", border: primary ? "0" : `1px solid ${UI.line}`, background: primary ? UI.accent : "transparent", color: primary ? UI.onAccent : UI.text });
+    b.addEventListener("click", fn);
+    return b;
+  };
+  const go = mk(T.scopeGo, true, () => finish(true));
+  const top = box({ display: "flex", alignItems: "center", gap: "8px" });
+  top.append(head, spacer, mk(T.scopeCancel, false, () => finish(false)), go);
+  panel.append(top, row);
+  layer.append(panel);
+  // The bar and dock would sit under the panel: put them away until the choice is made.
+  const chrome = [...document.querySelectorAll("[data-ui-explore-bar], [data-ui-explore-dock]")];
+  for (const c of chrome) c.style.visibility = "hidden";
+
+  function place() {
+    const r = el.getBoundingClientRect();
+    Object.assign(frame.style, { left: `${r.left - 4}px`, top: `${r.top - 4}px`, width: `${r.width + 8}px`, height: `${r.height + 8}px` });
+    for (const { target, v } of veils) {
+      const b = target.getBoundingClientRect();
+      Object.assign(v.style, { left: `${b.left}px`, top: `${b.top}px`, width: `${b.width}px`, height: `${b.height}px` });
+    }
+  }
+  function paint() {
+    for (const { i, v, tag } of veils) {
+      const on = state[i];
+      v.style.outline = on ? `2px solid ${UI.accent}` : `2px dashed ${UI.muted}`;
+      v.style.outlineOffset = "-2px";
+      // Left out: a striped veil, so it is obvious at a glance which parts stay as they are.
+      v.style.background = on ? "transparent" : "repeating-linear-gradient(135deg, rgb(12 12 14 / 0.55) 0 8px, rgb(12 12 14 / 0.35) 8px 16px)";
+      v.setAttribute("aria-pressed", String(on));
+      v.setAttribute("aria-label", `${parts[i].name}${on ? "" : ` (${T.scopeOut})`}`);
+      tag.replaceChildren(...(on ? [icon("check")] : []), document.createTextNode(on ? parts[i].name : `${parts[i].name} · ${T.scopeOut}`));
+      Object.assign(tag.style, { background: on ? UI.accent : UI.bg, color: on ? UI.onAccent : UI.muted });
+    }
+    chips.forEach((c, i) => {
+      const on = state[i];
+      const n = parts[i].els.length;
+      c.setAttribute("aria-checked", String(on));
+      c.replaceChildren(...(on ? [icon("check")] : []), document.createTextNode(`${parts[i].name}${n > 1 ? ` ×${n}` : ""}`));
+      Object.assign(c.style, { border: `1px solid ${on ? UI.accent : UI.line}`, background: on ? UI.accent : "transparent", color: on ? UI.onAccent : UI.muted, textDecoration: on ? "none" : "line-through" });
+    });
+  }
+  function toggle(i) {
+    state[i] = !state[i];
+    paint();
+  }
+  function key(e) {
+    if (e.key === "Escape") {
+      e.stopPropagation();
+      finish(false);
+    }
+  }
+  function finish(ok) {
+    window.removeEventListener("scroll", place, true);
+    window.removeEventListener("resize", place);
+    document.removeEventListener("keydown", key, true);
+    layer.remove();
+    for (const c of chrome) c.style.visibility = "";
+    if (ok) done(parts.map((p, i) => ({ component: p.name, file: p.file, instances: p.els.length, include: state[i] })));
+    else cancel();
+  }
+  window.addEventListener("scroll", place, true);
+  window.addEventListener("resize", place);
+  document.addEventListener("keydown", key, true);
+  document.body.append(layer);
+  place();
+  paint();
+  go.focus();
+  return () => finish(false);
+}
+
 // Starts pick mode. Returns a function that cancels it.
+// While the pointer moves, the element under it is framed and named. A click on an element that holds
+// other components opens the "what is included" step before onPick is called; the result then carries
+// `parts: [{ component, file, instances, include }]`.
 export function startPicking(onPick, onCancel) {
   let last = null;
-  const paint = (el, on) => {
-    if (!el) return;
-    el.style.outline = on ? "2px solid #e11d48" : "";
-    el.style.outlineOffset = on ? "2px" : "";
+  let closeParts = null;
+  const frame = box({ position: "fixed", zIndex: "2147483100", pointerEvents: "none", border: `2px solid ${UI.accent}`, borderRadius: "6px", display: "none" }, { "data-ui-explore-scope": "" });
+  const label = box({ position: "absolute", left: "-2px", bottom: "100%", marginBottom: "4px", padding: "2px 7px", borderRadius: "4px", whiteSpace: "nowrap", background: UI.accent, color: UI.onAccent, font: `600 11px/16px ${UI.mono}` });
+  frame.append(label);
+  document.body.append(frame);
+  const show = (el) => {
+    if (!el) return void (frame.style.display = "none");
+    const r = el.getBoundingClientRect();
+    const o = ownerOf(el);
+    Object.assign(frame.style, { display: "block", left: `${r.left - 3}px`, top: `${r.top - 3}px`, width: `${r.width + 6}px`, height: `${r.height + 6}px` });
+    label.textContent = o?.name ? `${o.name} · ${el.tagName.toLowerCase()}` : el.tagName.toLowerCase();
+    // Near the top edge there is no room above: put the name inside the frame.
+    Object.assign(label.style, r.top < 28 ? { bottom: "auto", top: "4px", left: "4px", marginBottom: "0" } : { bottom: "100%", top: "auto", left: "-2px", marginBottom: "4px" });
   };
   const own = (el) => !!el.closest?.(OWN);
   const over = (e) => {
-    paint(last, false);
     last = own(e.target) ? null : e.target;
-    paint(last, true);
+    show(last);
   };
   const stop = () => {
-    paint(last, false);
+    frame.remove();
     document.removeEventListener("mouseover", over, true);
     document.removeEventListener("click", click, true);
     document.removeEventListener("keydown", key, true);
@@ -146,7 +336,11 @@ export function startPicking(onPick, onCancel) {
     e.preventDefault();
     e.stopPropagation();
     stop();
-    onPick(describe(e.target));
+    const el = e.target;
+    const picked = describe(el);
+    const parts = partsOf(el);
+    if (!parts.length) return onPick(picked);
+    closeParts = chooseParts(el, parts, (chosen) => onPick({ ...picked, parts: chosen }), onCancel);
   };
   const key = (e) => {
     if (e.key !== "Escape") return;
@@ -157,5 +351,8 @@ export function startPicking(onPick, onCancel) {
   document.addEventListener("click", click, true);
   document.addEventListener("keydown", key, true);
   document.documentElement.style.cursor = "crosshair";
-  return stop;
+  return () => {
+    stop();
+    closeParts?.();
+  };
 }
