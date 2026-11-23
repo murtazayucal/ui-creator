@@ -6,19 +6,13 @@ Status: early development, unpublished. All seven commands are written. `palette
 
 ## See it work
 
-The screenshots below are from a small sample invoicing app (React, Tailwind). Nothing in them is a mock-up: each one is the running app with the explore bar on top.
+![Walkthrough: pick an element on the page, compare three variations of it, apply one](docs/images/demo.svg)
+
+The animation is an illustration of the flow, drawn after a real session on a small sample invoicing app (React, Tailwind): pick an element on the page, see it on its own with its variations beside it, apply the one you like.
 
 ### Variations, live in your own app
 
-Ask for alternatives to a page or a component and they appear in the browser, wired to your real data and handlers. The bar at the bottom switches between your current design and each draft. Here one round was asked for with the note "more futuristic":
-
-| Current | Draft A: instrument panel |
-|---|---|
-| ![The current dashboard](docs/images/compare-current.jpg) | ![Draft A](docs/images/compare-a.jpg) |
-
-| Draft B: lit rails | Draft C: night panel |
-|---|---|
-| ![Draft B](docs/images/compare-b.jpg) | ![Draft C](docs/images/compare-c.jpg) |
+Ask for alternatives to a page or a component and they appear in the browser, wired to your real data and handlers. The bar at the bottom switches between your current design and each draft. In the session above, one round was asked for with the note "more futuristic" and came back as an instrument panel, a lit rail and a night panel.
 
 What a round gives you:
 
@@ -30,17 +24,13 @@ What a round gives you:
 
 ### Compare on real rows
 
-A component that appears many times can show a different draft on each instance, so you compare them in place, next to each other, on real content. Here the invoice number cell shows the current version and three drafts down one column:
-
-![Drafts spread over the rows of a table](docs/images/compare-mixed.jpg)
+A component that appears many times can show a different draft on each instance, so you compare them in place, next to each other, on real content: four rows of a table, each showing a different draft of the same cell.
 
 With several comparisons open there is still one bar. Its scope selector says what a click applies to: all of them together, or one component set apart ("page C, table A").
 
 ### Design languages
 
 The Style window previews twelve design languages. Pick one, mix two, or describe your own in a sentence; the drafts come back in that language using your project's own colors.
-
-![The Style window with twelve design languages](docs/images/style-window.jpg)
 
 | Language | In short |
 |---|---|
