@@ -31,7 +31,7 @@ Read only the one the task needs. Paths are relative to this skill's folder.
 |---|---|
 | `references/ux-rules.md` | Auditing or judging usability; numeric thresholds |
 | `references/states.md` | Building or reviewing an interactive element or a data view |
-| `references/anti-patterns.md` | The result looks generic; before finalizing a new visual direction |
+| `references/anti-patterns.md` | The result looks generic; before finalizing a new visual direction; before showing drafts or new interface text |
 | `references/tokens.md` | Adding or restructuring colors, spacing, type or radius tokens |
 | `references/domains.md` | Choosing a visual direction for a product category |
 | `references/change-protocol.md` | Before editing any existing UI: the guard, check and report steps |

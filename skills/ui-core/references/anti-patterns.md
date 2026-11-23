@@ -42,9 +42,17 @@ Banning a default does not help by itself: the model moves to the next most comm
 - Emoji used as icons.
 - Abstract blobs, generic 3D illustrations, fake screenshots built from CSS shapes.
 
-**Copy**
-- Text that would fit any company ("Unlock the power of...", "seamless", "elevate").
+**Copy** (text you write; never a reason to rewrite text that is already there)
+- Text that would fit any company ("Unlock the power of...", "seamless", "elevate"; in Turkish "sorunsuz bir deneyim", "gücünü keşfedin", "bir üst seviyeye taşıyın").
 - Invented statistics and testimonials. Never add these.
+- A greeting or cheer that carries no information ("Welcome back! 🎉", "Harika!"), and exclamation marks on routine messages.
+- Three adjectives or three parallel items by reflex ("fast, secure and reliable").
+- A button that does not say what happens ("Get started", "Learn more", "Hemen başla", "Devam") where a verb and its object fit ("Create invoice", "Fatura oluştur").
+- An empty state that only announces emptiness ("No data yet"). Say what will appear here and how to add the first one.
+- Title Case On Every Label in a product that writes in sentence case; a placeholder doing a label's job.
+- In longer text: em dashes between clauses, "not just X but Y", a closing line that restates the paragraph.
+
+Better: the product's own nouns, a concrete verb, a real number from the data, and the length a busy person would put up with. Match the language and the form of address the product already uses.
 
 ## Tests
 
@@ -52,6 +60,19 @@ Banning a default does not help by itself: the model moves to the next most comm
 - **Identity test:** could the first screen belong to any other company? If so, add something specific to this one.
 - **Stripe test:** say in one word what the stripe's color means. If you cannot, remove it.
 - **Copy test:** if deleting 30% of the text improves the page, keep deleting.
+- **Swap test:** put a competitor's name above the text. If it still reads true, it says nothing about this product.
+- **Button test:** say the label after "I want to". If the sentence makes no sense, rename the button.
+
+## In drafts
+
+Run this before showing drafts in `explore`, and before proposing a new look in `element`, `page` or `overhaul`. It takes a minute and is the difference between three alternatives and the same default in three coats.
+
+1. Check each draft against the tells above, for the kind of surface it is (see the table below).
+2. **What the user asked for is not a smell.** A design language they chose (glass is translucent cards over a gradient by definition), a note in their words, or something the project already does stays.
+3. A tell that remains has to earn its place: say in the draft's one-line comment what it does for the reader (the stripe's color is the metric's status; the capitals mark the one section title). If you cannot say it, redraw that part.
+4. Look across the round. If two drafts differ only in decoration (a border here, a shadow there), replace one with a different structure.
+5. **Do not rewrite existing text in a draft.** The copy tells apply only to text the draft needs that did not exist before (an empty state, a new label), and when the user asks for wording. Show such text to the user as new, in their language.
+6. Tell the user in one line what you caught and changed ("B had capitals on every card label; kept on the section title only"). Say nothing when nothing was caught.
 
 ## Where to apply
 

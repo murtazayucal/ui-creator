@@ -4,6 +4,11 @@ What changed in each version of ui-creator. Newest first.
 
 To get new versions automatically, turn on auto-update for the marketplace: in Claude Code run `/plugin`, open the **Marketplaces** tab, select `ui-creator` and turn auto-update on. To update by hand, see [Staying up to date](README.md#staying-up-to-date).
 
+## 0.8.3 (2026-11-23)
+
+- `explore` checks its drafts against the list of machine-made looks before showing them: a tell has to earn its place or be redrawn, and two drafts that differ only in decoration are not two alternatives. What you asked for (a design language, a note) is never treated as a tell.
+- The list gained rules for interface text, with English and Turkish examples. They apply to text a draft adds, never to text that is already there.
+
 ## 0.8.2 (2026-11-23)
 
 - The `explore` command reads about half as much text when it starts. Its instructions for browser clicks, framework details, design-language rounds and design mode moved into separate files that are read only when needed. No behavior is meant to change.

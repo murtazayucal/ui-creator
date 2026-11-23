@@ -86,6 +86,7 @@ If `react` is false (not React, or a production build), use the `repeated` field
    - uses the project's tokens;
    - differs from the others in structure, not in small spacing tweaks.
    Put a one-line comment above each saying what it tries. Invent nothing: no charts, numbers or features the component does not have.
+   Then check the drafts against `references/anti-patterns.md` ("In drafts") in the core files, and fix what it catches before showing them. A round of drafts that all look machine-made is the failure this command is judged by.
 
 ## 3. Show
 
