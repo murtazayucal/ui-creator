@@ -32,6 +32,8 @@ With several comparisons open there is still one bar. Its scope selector says wh
 
 The Style window previews twelve design languages. Pick one, mix two, or describe your own in a sentence; the drafts come back in that language using your project's own colors.
 
+![The Style window: twelve design languages, each shown on a sample component](docs/images/styles.svg)
+
 | Language | In short |
 |---|---|
 | Glassmorphism | Translucent frosted panels floating over a colorful or photographic background. |
