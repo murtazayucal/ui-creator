@@ -4,6 +4,11 @@ What changed in each version of ui-creator. Newest first.
 
 To get new versions automatically, turn on auto-update for the marketplace: in Claude Code run `/plugin`, open the **Marketplaces** tab, select `ui-creator` and turn auto-update on. To update by hand, see [Staying up to date](README.md#staying-up-to-date).
 
+## 0.8.2 (2026-11-23)
+
+- The `explore` command reads about half as much text when it starts. Its instructions for browser clicks, framework details, design-language rounds and design mode moved into separate files that are read only when needed. No behavior is meant to change.
+- Its description of the bar and dock now matches the 0.8.0 interface.
+
 ## 0.8.1 (2026-11-23)
 
 - Prepared for the Claude plugin directory: the palette data is split into parts under the size limit for one file, an example app's launcher is pinned to an exact version, and an oversized lockfile is gone. Palette results are unchanged.
