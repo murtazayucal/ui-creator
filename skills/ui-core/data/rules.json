@@ -1,0 +1,53 @@
+{
+  "meta": {
+    "version": "2026-11",
+    "severity": "4 blocks a task or WCAG A on a core flow; 3 WCAG A/AA failure or missing state on a primary flow; 2 inconsistency or friction; 1 cosmetic or smell",
+    "kinds": {
+      "static": "detected by audit.mjs from source text; heuristic, verify before fixing",
+      "rendered": "needs the page rendered in a browser",
+      "judgment": "needs a human or model reading the UI"
+    }
+  },
+  "rules": [
+    { "id":"focus-removed", "kind":"static", "severity":3,"category":"a11y", "title":"Focus outline removed with no replacement", "fix":"Keep the outline, or add a :focus-visible ring of 2px with at least 3:1 contrast.", "source":"WCAG 2.4.7" },
+    { "id":"zoom-locked", "kind":"static", "severity":3,"category":"a11y", "title":"Browser zoom disabled in the viewport meta tag", "fix":"Remove user-scalable=no and maximum-scale=1.", "source":"WCAG 1.4.4" },
+    { "id":"html-no-lang", "kind":"static", "severity":3,"category":"a11y", "title":"<html> has no lang attribute", "fix":"Set lang to the page language.", "source":"WCAG 3.1.1" },
+    { "id":"img-no-alt", "kind":"static", "severity":3,"category":"a11y", "title":"Image without alt text", "fix":"Describe the image, or use alt=\"\" when it is decorative.", "source":"WCAG 1.1.1" },
+    { "id":"click-on-noninteractive", "kind":"static", "severity":3,"category":"a11y", "title":"Click handler on a non-interactive element", "fix":"Use <button> for actions and <a> for navigation.", "source":"WCAG 2.1.1, 4.1.2" },
+    { "id":"button-no-name", "kind":"static", "severity":3,"category":"a11y", "title":"Icon-only button with no accessible name", "fix":"Add aria-label, or visible text.", "source":"WCAG 4.1.2" },
+    { "id":"placeholder-as-label", "kind":"static", "severity":3,"category":"forms", "title":"Input relies on its placeholder as the label", "fix":"Add a visible <label> above the field; keep the placeholder for an example only.", "source":"WCAG 3.3.2; NN/g" },
+    { "id":"small-target", "kind":"static", "severity":3,"category":"a11y", "title":"Clickable target smaller than 24px", "fix":"Give the control at least 24x24 CSS px (44px on touch layouts) with padding or min size.", "source":"WCAG 2.5.8" },
+    { "id":"no-loading-error-state", "kind":"static", "severity":3,"category":"states", "title":"Data is fetched and listed with no loading or error branch", "fix":"Add a skeleton for loading and an error view with retry.", "source":"NN/g response times; Vercel guidelines" },
+    { "id":"no-empty-state", "kind":"static", "severity":2,"category":"states", "title":"List has no empty state", "fix":"Explain what belongs here and offer the action that creates the first item.", "source":"Nielsen heuristic 10" },
+    { "id":"positive-tabindex", "kind":"static", "severity":2,"category":"a11y", "title":"Positive tabindex overrides the natural focus order", "fix":"Use 0 or -1 and order the DOM instead.", "source":"WCAG 2.4.3" },
+    { "id":"hardcoded-color", "kind":"static", "severity":2,"category":"consistency", "title":"Hard-coded color instead of a token", "fix":"Map each value to an existing token, or add one token for the cluster.", "source":"references/tokens.md" },
+    { "id":"arbitrary-value", "kind":"static", "severity":2,"category":"consistency", "title":"Off-scale size or spacing value", "fix":"Use the nearest step of the spacing or type scale.", "source":"references/tokens.md" },
+    { "id":"small-text", "kind":"static", "severity":2,"category":"readability", "title":"Text smaller than 12px", "fix":"Use 12px at the very least; 14-16px for anything users must read.", "source":"convention" },
+    { "id":"generic-error-copy", "kind":"static", "severity":2,"category":"copy", "title":"Error message does not say what happened or what to do", "fix":"Name the problem and the fix, reusing the field's label.", "source":"GOV.UK error message; Nielsen heuristic 9" },
+    { "id":"no-reduced-motion", "kind":"static", "severity":2,"category":"motion", "title":"Animations present but prefers-reduced-motion is never honored", "fix":"Disable or shorten non-essential motion under prefers-reduced-motion.", "source":"Vercel guidelines; WCAG 2.3.3 (AAA)" },
+    { "id":"transition-all", "kind":"static", "severity":1,"category":"motion", "title":"transition: all", "fix":"List the properties that actually change, preferably transform and opacity.", "source":"Vercel guidelines" },
+    { "id":"emoji-icon", "kind":"static", "severity":1,"category":"smell", "title":"Emoji used in the interface", "fix":"If it stands in for an icon, use the project's icon set.", "source":"references/anti-patterns.md" },
+    { "id":"default-gradient", "kind":"static", "severity":1,"category":"smell", "title":"Default purple gradient or gradient text", "fix":"Keep only if it is the brand. Otherwise use the project's primary color.", "source":"references/anti-patterns.md" },
+    { "id":"text-contrast", "kind":"rendered", "severity":3,"category":"a11y", "title":"Text contrast below 4.5:1 (3:1 for large text)", "fix":"Check each text/background pair with contrast.mjs and adjust the token.", "source":"WCAG 1.4.3" },
+    { "id":"ui-contrast", "kind":"rendered", "severity":3,"category":"a11y", "title":"Input borders, icons or focus ring below 3:1", "fix":"Darken or lighten the token until it reaches 3:1.", "source":"WCAG 1.4.11" },
+    { "id":"reflow", "kind":"rendered", "severity":3,"category":"responsive", "title":"Horizontal scroll at the current width (check 320px)", "fix":"Let content wrap or stack; remove fixed widths.", "source":"WCAG 1.4.10" },
+    { "id":"focus-order", "kind":"rendered", "severity":3,"category":"a11y", "title":"Tab order does not follow the visual order, or focus is hidden behind sticky content", "fix":"Order the DOM to match; add scroll-margin under sticky headers.", "source":"WCAG 2.4.3, 2.4.11" },
+    { "id":"dialog-focus", "kind":"rendered", "severity":3,"category":"a11y", "title":"Dialog does not trap focus, close on Escape or return focus", "fix":"Use <dialog> or the component library's dialog.", "source":"WAI-ARIA APG" },
+    { "kind":"rendered", "id":"content-overflow", "severity":3,"category":"responsive", "title":"Content is wider than its box and spills over neighbours", "fix":"Let the text wrap, allow the box to grow, or reduce the columns at this width.", "source":"WCAG 1.4.10" },
+    { "kind":"rendered", "id":"target-size", "severity":3,"category":"a11y", "title":"Rendered control smaller than 24x24 CSS px", "fix":"Add padding or a minimum size.", "source":"WCAG 2.5.8" },
+    { "kind":"rendered", "id":"touch-target", "severity":2,"category":"a11y", "title":"Controls smaller than 44px on a phone-width viewport", "fix":"Make touch controls 44px tall and wide.", "source":"Vercel guidelines; WCAG 2.5.5 (AAA)" },
+    { "kind":"rendered", "id":"control-no-name", "severity":3,"category":"a11y", "title":"Rendered control with no accessible name", "fix":"Add visible text or aria-label.", "source":"WCAG 4.1.2" },
+    { "kind":"rendered", "id":"control-no-label", "severity":3,"category":"forms", "title":"Rendered form field with no label", "fix":"Associate a <label>, or add aria-label.", "source":"WCAG 3.3.2" },
+    { "kind":"rendered", "id":"clipped-text", "severity":2,"category":"readability", "title":"Text cut off with no ellipsis", "fix":"Let it wrap, or truncate with an ellipsis and expose the full text.", "source":"Vercel guidelines" },
+    { "kind":"rendered", "id":"heading-structure", "severity":2,"category":"a11y", "title":"Heading levels skipped, or not exactly one h1", "fix":"Use one h1 and do not skip levels.", "source":"WCAG 1.3.1" },
+    { "id":"interactive-states", "kind":"rendered", "severity":2,"category":"states", "title":"Hover, active or disabled state missing or indistinct", "fix":"See references/states.md.", "source":"Vercel guidelines" },
+    { "id":"one-primary-action", "kind":"judgment", "severity":2,"category":"hierarchy", "title":"More than one visually dominant action in a view", "fix":"Keep one primary; demote the rest to secondary or tertiary.", "source":"Von Restorff; Nielsen heuristic 8" },
+    { "id":"grouping", "kind":"judgment", "severity":2,"category":"hierarchy", "title":"Spacing does not show what belongs together", "fix":"Make gaps inside a group smaller than gaps between groups.", "source":"Law of proximity" },
+    { "id":"consistency", "kind":"judgment", "severity":2,"category":"consistency", "title":"Same role built differently in different places", "fix":"Pick one component and one name per role.", "source":"Nielsen heuristic 4" },
+    { "id":"destructive-safety", "kind":"judgment", "severity":3,"category":"safety", "title":"Destructive action with no confirmation or undo", "fix":"Add a confirm step or an undo window.", "source":"Nielsen heuristics 3 and 5" },
+    { "id":"pending-feedback", "kind":"judgment", "severity":3,"category":"states", "title":"Action gives no feedback while it runs", "fix":"Disable the control, keep its label and show an indicator.", "source":"Nielsen heuristic 1" },
+    { "id":"color-only", "kind":"judgment", "severity":3,"category":"a11y", "title":"Color is the only cue for meaning", "fix":"Add text, an icon or a shape.", "source":"WCAG 1.4.1" },
+    { "id":"alt-quality", "kind":"judgment", "severity":2,"category":"a11y", "title":"Alt text or label does not describe the purpose", "fix":"Write what the image or control is for.", "source":"WCAG 1.1.1, 2.4.6" },
+    { "id":"stress-content", "kind":"judgment", "severity":2,"category":"states", "title":"Layout breaks with long text, missing images or extreme counts", "fix":"Test with the stress content in references/states.md.", "source":"Vercel guidelines" }
+  ]
+}

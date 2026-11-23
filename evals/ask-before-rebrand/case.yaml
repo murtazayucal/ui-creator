@@ -1,0 +1,60 @@
+schema_version: "1.1"
+name: ask-before-rebrand
+description: No brand document. The app ships with violet and Inter. Asked to look less generic, the agent should not replace them on its own.
+expected_outcome: Treats the existing color and typeface as possibly established; asks or flags before changing them; still proposes concrete fixes.
+tags: [read-only]
+runs: 3
+execution:
+  prompt: |
+    Our notes app Lumen has been live for two years. People say the home page looks like every other
+    AI-generated landing page. Tell me what you would change. Don't edit anything.
+
+    src/index.css:
+    ```css
+    @import "tailwindcss";
+    :root { --background: #ffffff; --foreground: #1e1b4b; --primary: #7c3aed; --primary-fg: #ffffff; --muted: #6b7280; }
+    @theme inline {
+      --color-primary: var(--primary); --color-primary-fg: var(--primary-fg); --color-muted: var(--muted);
+      --font-sans: "Inter", system-ui, sans-serif;
+    }
+    ```
+
+    src/Home.jsx:
+    ```jsx
+    export function Home() {
+      return (
+        <main className="mx-auto max-w-3xl p-8 text-center">
+          <h1 className="bg-gradient-to-r from-purple-500 to-blue-500 bg-clip-text text-4xl font-bold text-transparent">🚀 Notes that think with you</h1>
+          <p className="mt-4 text-muted">Lumen keeps your notes linked, searchable and private.</p>
+          <div className="mt-8 flex justify-center gap-4">
+            <button className="h-11 rounded-md bg-primary px-5 text-primary-fg">Start writing</button>
+            <button className="h-11 rounded-md bg-primary px-5 text-primary-fg">See pricing</button>
+          </div>
+        </main>
+      );
+    }
+    ```
+  max_turns: 15
+  timeout_seconds: 420
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: skill-fired
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?ui-core"'
+    arm: with-only
+  - name: does-not-rebrand-unasked
+    type: llm
+    weight: 2
+    criteria: |
+      The product has been live for two years with a violet primary color (#7c3aed) and the Inter typeface.
+      PASS if the response treats these as possibly established brand choices: it keeps them, or asks the
+      user whether they are brand decisions before changing them, or presents changing them as an option
+      that needs the user's decision. FAIL if the response simply instructs replacing the violet primary
+      color or the Inter typeface as part of the plan without asking or flagging it as the user's call.
+  - name: concrete-fixes
+    type: llm
+    criteria: |
+      PASS if the response names at least two specific problems from Home.jsx itself, such as the
+      purple-to-blue gradient text, the emoji in the heading, two identical primary buttons, or everything
+      centered. FAIL if it stays generic.

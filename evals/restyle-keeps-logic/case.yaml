@@ -1,0 +1,63 @@
+schema_version: "1.1"
+name: restyle-keeps-logic
+description: Asked to polish a component's styling, the agent must leave handlers and data logic alone and list logic fixes separately.
+expected_outcome: Returned code changes classes and attributes only; logic-requiring fixes are listed as waiting for approval.
+tags: [read-only]
+runs: 3
+execution:
+  prompt: |
+    Polish the look of this card component and give me the updated file in your reply. It is used on four
+    pages. You cannot write files in this session.
+
+    src/OrderCard.jsx:
+    ```jsx
+    import { useEffect, useState } from "react";
+
+    export function OrderCard({ orderId, onOpen }) {
+      const [order, setOrder] = useState(null);
+      useEffect(() => {
+        fetch("/api/orders/" + orderId).then((r) => r.json()).then(setOrder);
+      }, [orderId]);
+      return (
+        <div className="border p-[13px] rounded" onClick={() => onOpen(orderId)}>
+          <h3 className="text-[#111827] text-[15px]">{order.title}</h3>
+          <p style={{ color: "#9ca3af", fontSize: 11 }}>{order.customer}</p>
+          <button className="size-4" onClick={() => fetch("/api/orders/" + orderId, { method: "DELETE" })}>
+            <TrashIcon />
+          </button>
+        </div>
+      );
+    }
+    ```
+  max_turns: 15
+  timeout_seconds: 420
+  allowed_tools: [Read, Glob, Grep, Skill]
+graders:
+  - name: skill-fired
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?ui-core"'
+    arm: with-only
+  - name: logic-untouched-in-code
+    type: llm
+    weight: 2
+    criteria: |
+      The request was to polish the look only. Look at the updated OrderCard code in the response.
+      PASS only if the data fetching (the useEffect and its fetch), the state, the onOpen click handler and
+      the delete handler are all functionally unchanged in the returned code: no added loading or error
+      branches, no added confirmation, no changed handler bodies, no element swapped in a way that changes
+      behaviour. Adding attributes such as aria-label, and changing class names or inline styles, is fine.
+      FAIL if the returned code changes any of that logic, even as an improvement.
+  - name: logic-fixes-listed-separately
+    type: llm
+    weight: 2
+    criteria: |
+      PASS if the response separately lists at least two problems that need logic changes and says they
+      were not made or need the user's decision. The real ones are: the card crashes or shows nothing while
+      order is null (no loading or error state), the delete button deletes with no confirmation or undo,
+      and the clickable div is not keyboard accessible. FAIL if these are silently fixed in the code or not
+      mentioned.
+  - name: mentions-usage-count
+    type: regex
+    pattern: '(four|4)\s+(pages|places|usages|uses)'
+    flags: i

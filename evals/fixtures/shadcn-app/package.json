@@ -1,0 +1,1 @@
+{ "name": "shadcn-app", "private": true, "dependencies": { "next": "^15.3.0", "react": "^19.0.0", "radix-ui": "^1.4.0", "recharts": "^2.15.0", "motion": "^12.0.0", "lucide-react": "^0.460.0" }, "devDependencies": { "tailwindcss": "^4.1.0" } }

@@ -1,0 +1,8 @@
+{
+  "name": "demo-shop",
+  "private": true,
+  "type": "module",
+  "scripts": { "dev": "vite --port 5173 --strictPort", "build": "vite build" },
+  "dependencies": { "react": "^19.0.0", "react-dom": "^19.0.0" },
+  "devDependencies": { "@tailwindcss/vite": "^4.1.0", "@vitejs/plugin-react": "^4.3.0", "tailwindcss": "^4.1.0", "vite": "^6.0.0" }
+}

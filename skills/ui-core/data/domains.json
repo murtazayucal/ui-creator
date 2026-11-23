@@ -1,0 +1,194 @@
+{
+  "meta": {
+    "note": "Domain-to-color directions are this project's synthesis of the research notes, not measured facts. Effects of hue on trust are small; rank contrast, consistency and hierarchy above hue choice.",
+    "evidence": {
+      "A": "peer-reviewed support (effect may be small)",
+      "B": "brand-count or industry analyses with undocumented methods",
+      "C": "convention only; no primary study found"
+    },
+    "locale": "Status colors are locale-dependent: mainland China, Japan and Taiwan use red for price up and green for down. Culture-specific color meanings were not verified and are not encoded here."
+  },
+  "domains": [
+    {
+      "id": "fintech",
+      "aliases": ["fintech", "finance", "bank", "banking", "insurance", "payment", "finans", "banka", "sigorta", "odeme"],
+      "keywords": ["financ", "fintech", "bank", "insurance", "invoice", "billing", "expense"],
+      "hues": ["blue", "green", "teal", "neutral"],
+      "chroma": ["muted", "moderate", "neutral"],
+      "evidence": "A/B",
+      "direction": "Blue primary with restrained chroma on neutral surfaces; green for positive money semantics.",
+      "caution": "Avoid black-dominant screens in trust-critical flows. Gain/loss colors invert in some East Asian markets."
+    },
+    {
+      "id": "crypto",
+      "aliases": ["crypto", "web3", "nft", "blockchain", "kripto"],
+      "keywords": ["crypto", "web3", "nft"],
+      "hues": ["purple", "indigo", "cyan", "green", "orange"],
+      "chroma": ["vivid", "moderate"],
+      "scheme": "dark",
+      "evidence": "C",
+      "direction": "Dark-first surfaces with one saturated accent."
+    },
+    {
+      "id": "healthcare",
+      "aliases": ["health", "healthcare", "medical", "clinic", "hospital", "pharmacy", "saglik", "tip", "klinik", "hastane", "eczane"],
+      "keywords": ["health", "medical", "clinic", "pharmacy", "dental", "patient", "telemedicine", "medication", "veterinary", "senior care"],
+      "hues": ["blue", "teal", "cyan", "green"],
+      "chroma": ["muted", "moderate"],
+      "scheme": "light",
+      "evidence": "A-weak/C",
+      "direction": "Blue or teal/green, light surfaces, low chroma."
+    },
+    {
+      "id": "wellness",
+      "aliases": ["wellness", "fitness", "meditation", "mental health", "yoga", "spa", "beauty", "spor", "meditasyon", "guzellik"],
+      "keywords": ["wellness", "fitness", "gym", "meditation", "mental health", "yoga", "sleep", "mood", "habit", "beauty", "fasting", "hydration", "calorie", "cycle tracker"],
+      "hues": ["green", "teal", "purple", "pink", "orange"],
+      "chroma": ["muted", "moderate"],
+      "evidence": "C",
+      "direction": "Calm, lower-chroma palettes for mindfulness; higher energy (orange, red) is conventional for fitness."
+    },
+    {
+      "id": "saas",
+      "aliases": ["saas", "b2b", "productivity", "dashboard", "admin", "crm", "erp", "uretkenlik", "panel", "yonetim paneli", "kurumsal"],
+      "keywords": ["saas", "b2b", "productivity", "dashboard", "crm", "collaboration", "inventory", "analytics", "automation", "builder", "calendar", "notes", "email client", "management"],
+      "hues": ["blue", "indigo", "neutral", "teal"],
+      "chroma": ["moderate", "vivid", "neutral"],
+      "evidence": "B/C",
+      "direction": "Blue or indigo primary with one warm accent for the main action; neutral grays carry most of the interface."
+    },
+    {
+      "id": "developer",
+      "aliases": ["developer", "devtool", "developer tool", "api", "ide", "cybersecurity", "security", "gelistirici", "yazilim araci", "siber guvenlik"],
+      "keywords": ["developer", "api", "coding", "cybersecurity", "open source", "feature flag", "status page", "changelog", "documentation", "vpn", "password"],
+      "hues": ["neutral", "green", "blue", "purple", "cyan"],
+      "chroma": ["neutral", "moderate", "vivid"],
+      "scheme": "dark",
+      "evidence": "C",
+      "direction": "Dark-first or neutral surfaces with a single saturated accent."
+    },
+    {
+      "id": "ecommerce",
+      "aliases": ["ecommerce", "e-commerce", "shop", "store", "retail", "marketplace", "e-ticaret", "eticaret", "magaza", "perakende", "pazaryeri"],
+      "keywords": ["e-commerce", "marketplace", "shop", "subscription box", "auction", "classifieds", "grocery", "gift", "digital products", "ticketing"],
+      "hues": ["neutral", "orange", "red", "blue", "green"],
+      "chroma": ["neutral", "moderate", "vivid"],
+      "scheme": "light",
+      "evidence": "B/C",
+      "direction": "Neutral surfaces so product imagery dominates; a warm accent for buy and sale actions."
+    },
+    {
+      "id": "food",
+      "aliases": ["food", "restaurant", "cafe", "bakery", "delivery", "recipe", "yemek", "restoran", "kafe", "firin", "tarif"],
+      "keywords": ["food", "restaurant", "bakery", "cafe", "brewery", "recipe", "cooking", "grocery"],
+      "hues": ["red", "orange", "yellow", "green"],
+      "chroma": ["moderate", "vivid"],
+      "evidence": "B/C",
+      "direction": "Warm reds, oranges and yellows are the category convention.",
+      "caution": "Claims that red/yellow stimulate appetite or that blue suppresses it have no primary source; treat as convention, not mechanism."
+    },
+    {
+      "id": "luxury",
+      "aliases": ["luxury", "fashion", "premium", "jewelry", "luks", "moda", "mucevher"],
+      "keywords": ["luxury", "premium", "wedding", "wardrobe", "photography", "interior"],
+      "hues": ["neutral", "yellow", "orange"],
+      "chroma": ["neutral", "muted"],
+      "evidence": "B",
+      "direction": "Black or near-black with white, very low chroma, optional metallic gold accent."
+    },
+    {
+      "id": "education",
+      "aliases": ["education", "learning", "school", "course", "university", "lms", "egitim", "okul", "kurs", "universite", "ogrenme"],
+      "keywords": ["educat", "learning", "course", "lms", "flashcard", "study", "bootcamp", "university", "academic", "credential", "quiz"],
+      "hues": ["blue", "indigo", "green", "orange", "purple"],
+      "chroma": ["moderate", "vivid"],
+      "scheme": "light",
+      "evidence": "C",
+      "direction": "Clear, friendly hues on light surfaces; adult learning leans toward blue and indigo."
+    },
+    {
+      "id": "kids",
+      "aliases": ["kids", "children", "child", "childcare", "toy", "cocuk", "kres", "oyuncak", "bebek"],
+      "keywords": ["kids", "child", "parenting", "baby", "family"],
+      "hues": ["orange", "yellow", "pink", "green", "blue", "purple"],
+      "chroma": ["vivid", "moderate"],
+      "scheme": "light",
+      "evidence": "C",
+      "direction": "Higher chroma, several hues, light surfaces."
+    },
+    {
+      "id": "gaming",
+      "aliases": ["gaming", "game", "esports", "oyun", "espor"],
+      "keywords": ["gaming", "game", "arcade"],
+      "hues": ["purple", "indigo", "pink", "cyan", "green", "red"],
+      "chroma": ["vivid"],
+      "scheme": "dark",
+      "evidence": "C",
+      "direction": "Dark surfaces with saturated neon or violet accents."
+    },
+    {
+      "id": "travel",
+      "aliases": ["travel", "tourism", "hotel", "hospitality", "airline", "booking", "seyahat", "turizm", "otel", "havayolu", "rezervasyon"],
+      "keywords": ["travel", "tourism", "hotel", "hospitality", "airline", "road trip", "booking", "transit", "ride hailing"],
+      "hues": ["blue", "teal", "cyan", "orange"],
+      "chroma": ["moderate", "vivid"],
+      "evidence": "C",
+      "direction": "Blue or teal (sky, water) with a warm accent."
+    },
+    {
+      "id": "social",
+      "aliases": ["social", "community", "creator", "dating", "chat", "messaging", "sosyal", "topluluk", "icerik uretici", "sohbet", "mesajlasma"],
+      "keywords": ["social", "community", "creator", "dating", "chat", "forum", "podcast", "streaming", "membership", "link-in-bio"],
+      "hues": ["pink", "purple", "red", "orange", "blue", "indigo"],
+      "chroma": ["vivid"],
+      "evidence": "C",
+      "direction": "One strongly saturated signature hue; standing apart matters more than following a category norm."
+    },
+    {
+      "id": "government",
+      "aliases": ["government", "public", "civic", "municipality", "legal", "law", "kamu", "devlet", "belediye", "hukuk", "avukat"],
+      "keywords": ["government", "civic", "public service", "legal", "grant", "patent", "non-profit"],
+      "hues": ["blue", "neutral", "indigo"],
+      "chroma": ["muted", "moderate", "neutral"],
+      "scheme": "light",
+      "evidence": "C",
+      "direction": "Blue or near-black, conservative. Contrast and accessibility govern the choice, not mood."
+    },
+    {
+      "id": "sustainability",
+      "aliases": ["sustainability", "climate", "energy", "agriculture", "farm", "plant", "eco", "surdurulebilirlik", "iklim", "enerji", "tarim", "bitki", "cevre"],
+      "keywords": ["sustainab", "climate", "energy", "agricultur", "farm", "plant", "florist", "ev/charging"],
+      "hues": ["green", "teal", "yellow"],
+      "chroma": ["muted", "moderate"],
+      "evidence": "C",
+      "direction": "Green family."
+    },
+    {
+      "id": "media",
+      "aliases": ["media", "news", "blog", "magazine", "publishing", "medya", "haber", "dergi", "yayin"],
+      "keywords": ["news", "magazine", "blog", "newsletter", "wiki", "journal", "knowledge base", "reading"],
+      "hues": ["neutral", "red", "blue"],
+      "chroma": ["neutral", "muted", "moderate"],
+      "evidence": "C",
+      "direction": "Neutral, text-first surfaces with a single restrained accent."
+    },
+    {
+      "id": "realestate",
+      "aliases": ["real estate", "property", "construction", "architecture", "emlak", "gayrimenkul", "insaat", "mimarlik"],
+      "keywords": ["real estate", "property", "construction", "architecture", "home services", "home decoration"],
+      "hues": ["blue", "teal", "neutral", "orange", "green"],
+      "chroma": ["muted", "moderate", "neutral"],
+      "evidence": "C",
+      "direction": "Trust-leaning blues or neutrals with a warm accent; let photography carry color."
+    },
+    {
+      "id": "automotive",
+      "aliases": ["automotive", "car", "vehicle", "logistics", "delivery", "otomotiv", "araba", "arac", "lojistik", "kargo"],
+      "keywords": ["automotive", "car dealership", "logistics", "delivery", "parking", "drone"],
+      "hues": ["red", "neutral", "blue", "orange"],
+      "chroma": ["neutral", "moderate", "vivid"],
+      "evidence": "B",
+      "direction": "Red is over-represented in automotive logos; neutral dark surfaces are common."
+    }
+  ]
+}

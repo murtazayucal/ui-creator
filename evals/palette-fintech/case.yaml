@@ -1,0 +1,39 @@
+schema_version: "1.1"
+name: palette-fintech
+description: Asked for palette options for a fintech product, the agent queries the bundled library instead of inventing palettes.
+expected_outcome: Runs palette.mjs, offers candidates by library id with contrast information, states the evidence level, changes nothing.
+tags: [needs-bash]
+runs: 3
+execution:
+  prompt: |
+    I'm building a personal finance dashboard and haven't picked colors yet. Give me a few palette options
+    that suit it. I want to compare before deciding.
+  max_turns: 20
+  timeout_seconds: 600
+  allowed_tools: [Read, Glob, Grep, Skill, Bash]
+graders:
+  - name: skill-fired
+    type: tool_used
+    tool: Skill
+    input_match: '"skill"\s*:\s*"(?:[\w-]+:)?(ui-core|palette)"'
+    arm: with-only
+  - name: queried-library
+    type: tool_used
+    tool: Bash
+    input_match: 'palette\.mjs'
+    arm: with-only
+  - name: cites-library-ids
+    type: regex
+    pattern: '(uiuxpromax-\d{3}|daisyui-[a-z]+|tweakcn-[a-z-]+|catppuccin-[a-z]+)'
+  - name: offers-choice-with-contrast
+    type: llm
+    criteria: |
+      PASS if the response offers at least three distinct palette options with hex colors, gives a contrast
+      figure or pass/fail for each or says which were contrast-checked, and asks the user to choose instead
+      of applying one. FAIL otherwise.
+  - name: no-psychology-claims
+    type: llm
+    criteria: |
+      PASS if color-to-domain reasoning is presented as convention or with a stated evidence level, with no
+      claim that a color makes users trust, buy or feel something as established fact. FAIL if it states
+      such effects as fact.

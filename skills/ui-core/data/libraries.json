@@ -1,0 +1,27 @@
+{
+  "meta": {
+    "checked": "2026-11-23",
+    "note": "How an agent can reach each component library's documentation or components. Commands come from this project's research notes; confirm against the library's own docs before running one, and ask the user before installing anything."
+  },
+  "libraries": [
+    { "package": "shadcn", "detect": ["components.json"], "name": "shadcn/ui", "category": "components", "access": ["CLI: npx shadcn@latest add <item>", "Project info: npx shadcn@latest info --json", "MCP server: npx shadcn@latest mcp", "Skill: npx skills add shadcn/ui"] },
+    { "package": "@mui/material", "name": "MUI", "category": "components", "access": ["MCP server: @mui/mcp"] },
+    { "package": "antd", "name": "Ant Design", "category": "components", "access": ["MCP: antd mcp (from @ant-design/cli)", "llms.txt on the docs site"] },
+    { "package": "@chakra-ui/react", "name": "Chakra UI", "category": "components", "access": ["MCP server: @chakra-ui/react-mcp (some tools need a Pro key)"] },
+    { "package": "@heroui/react", "name": "HeroUI", "category": "components", "access": ["MCP server: @heroui/react-mcp", "Skill: npx skills add heroui-inc/heroui", "llms.txt on the docs site"] },
+    { "package": "@mantine/core", "name": "Mantine", "category": "components", "access": ["llms.txt on the docs site"] },
+    { "package": "daisyui", "name": "daisyUI", "category": "components", "access": ["Skill page on daisyui.com", "Blueprint MCP (paid)"] },
+    { "package": "flowbite", "name": "Flowbite", "category": "components", "access": ["MCP server: npx flowbite-mcp"] },
+    { "package": "primevue", "name": "PrimeVue", "category": "components", "access": ["MCP server: npx -y @primevue/mcp"] },
+    { "package": "@nuxt/ui", "name": "Nuxt UI", "category": "components", "access": ["Hosted MCP: ui.nuxt.com/mcp"] },
+    { "package": "storybook", "name": "Storybook", "category": "tooling", "access": ["MCP addon: npx storybook add @storybook/addon-mcp"] },
+    { "package": "@base-ui-components/react", "name": "Base UI", "category": "primitives", "access": ["Used through shadcn/ui when components.json selects it"] },
+    { "package": "@radix-ui/*", "name": "Radix UI", "category": "primitives", "access": ["Used through shadcn/ui when components.json selects it"] },
+    { "package": "@headlessui/react", "name": "Headless UI", "category": "primitives", "access": [] },
+    { "package": "react-aria-components", "name": "React Aria", "category": "primitives", "access": [] },
+    { "package": "recharts", "name": "Recharts", "category": "data", "access": [] },
+    { "package": "@tremor/react", "name": "Tremor", "category": "data", "access": [] },
+    { "package": "motion", "name": "Motion", "category": "animation", "access": [] },
+    { "package": "framer-motion", "name": "Framer Motion", "category": "animation", "access": [] }
+  ]
+}

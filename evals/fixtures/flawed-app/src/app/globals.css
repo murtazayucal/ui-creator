@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #111827;
+  --primary: #6366f1;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+}
+
+.badge { color: #9ca3af; background: #f3f4f6; font-size: 10px; }
+.link:focus { outline: none; }
+.fade { transition: all 0.3s; }
