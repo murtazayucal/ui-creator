@@ -39,6 +39,8 @@ const startsWord = (hay, needle) => {
 let lib, dom;
 try {
   lib = load("palettes.json");
+  // The palettes are kept in parts; palettes.json names them.
+  if (Array.isArray(lib.parts)) lib.palettes = lib.parts.flatMap((f) => load(f).palettes);
   dom = load("domains.json");
 } catch (e) {
   out({ error: "palette data not found or unreadable", detail: e.message });

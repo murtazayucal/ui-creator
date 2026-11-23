@@ -1,12 +1,16 @@
 {
   "name": "ui-creator",
-  "owner": { "name": "Murtaza Mehdi Yucal", "url": "https://github.com/murtazayucal" },
+  "description": "ui-creator: a Claude Code plugin that redesigns the interface you already have, with live variations in your running app.",
+  "owner": {
+    "name": "Murtaza Mehdi Yucal",
+    "url": "https://github.com/murtazayucal"
+  },
   "plugins": [
     {
       "name": "ui-creator",
       "source": "./",
       "description": "Audit and improve existing UIs: domain-aware contrast-checked palettes, UX rule audits, live layout alternatives, and a picker for component sources.",
-      "version": "0.8.0",
+      "version": "0.8.1",
       "license": "MIT"
     }
   ]

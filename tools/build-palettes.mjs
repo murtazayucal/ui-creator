@@ -308,9 +308,26 @@ const head = {
   contrast: "WCAG 2.2 ratio, rounded down to 2 decimals. Text pairs need 4.5, UI pairs 3.",
   sources: SOURCES,
 };
-const body = palettes.map((p) => "    " + JSON.stringify(p)).join(",\n");
-fs.mkdirSync(path.dirname(OUT), { recursive: true });
-fs.writeFileSync(OUT, `{\n  "meta": ${JSON.stringify(head)},\n  "palettes": [\n${body}\n  ]\n}\n`);
+// The plugin directory holds any file over 256 KiB for a reviewer, so the palettes are written in
+// parts of at most 200 kB each, and palettes.json is the index that names them.
+const LIMIT = 200_000;
+const parts = [[]];
+let size = 0;
+for (const p of palettes) {
+  const n = JSON.stringify(p).length + 6;
+  if (size + n > LIMIT && parts.at(-1).length) {
+    parts.push([]);
+    size = 0;
+  }
+  parts.at(-1).push(p);
+  size += n;
+}
+const dataDir = path.dirname(OUT);
+fs.mkdirSync(dataDir, { recursive: true });
+for (const f of fs.readdirSync(dataDir)) if (/^palettes-\d+\.json$/.test(f)) fs.unlinkSync(path.join(dataDir, f));
+const names = parts.map((_, i) => `palettes-${i + 1}.json`);
+parts.forEach((rows, i) => fs.writeFileSync(path.join(dataDir, names[i]), `{\n  "palettes": [\n${rows.map((p) => "    " + JSON.stringify(p)).join(",\n")}\n  ]\n}\n`));
+fs.writeFileSync(OUT, `{\n  "meta": ${JSON.stringify(head)},\n  "parts": ${JSON.stringify(names)}\n}\n`);
 
 // ---------- report ----------
 const by = (fn) => palettes.reduce((a, p) => ((a[fn(p)] = (a[fn(p)] ?? 0) + 1), a), {});

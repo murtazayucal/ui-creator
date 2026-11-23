@@ -4,6 +4,11 @@ What changed in each version of ui-creator. Newest first.
 
 To get new versions automatically, turn on auto-update for the marketplace: in Claude Code run `/plugin`, open the **Marketplaces** tab, select `ui-creator` and turn auto-update on. To update by hand, see [Staying up to date](README.md#staying-up-to-date).
 
+## 0.8.1 (2026-11-23)
+
+- Prepared for the Claude plugin directory: the palette data is split into parts under the size limit for one file, an example app's launcher is pinned to an exact version, and an oversized lockfile is gone. Palette results are unchanged.
+- README: a section on everything the plugin runs and writes on your machine.
+
 ## 0.8.0 (2026-11-23)
 
 - **Shorter bar.** Scope and drafts, three view tools, New variations, Apply, and a menu. New variations opens a small form with the note and the Style window; Save, Remove and Close comparison moved into the menu. The arrow-key hint is gone; the arrow keys still step through drafts.

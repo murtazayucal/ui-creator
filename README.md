@@ -166,6 +166,20 @@ The plugin never checks for updates by itself. What changed in each version is i
 - `design-system/pages/<page>.md`: page-specific exceptions.
 - `design-system/sources.json`: the component sources you chose.
 
+## What it runs and writes on your machine
+
+Everything the plugin does happens on your machine. None of its scripts makes a network request.
+
+- **Scripts.** Node scripts in `skills/ui-core/scripts/` read your project's source files to audit them, detect the framework, look up palettes, compute contrast and compare a diff. They print results for Claude to read.
+- **Files in your project.** The `design-system/` folder described above. During `explore`: a temporary `__explore__` folder of helper files, a temporary drafts file next to the component, and a temporary wrapper around it. The drafts file and the wrapper are removed when you apply or close that comparison; the helper folder goes with the last one.
+- **A local listener, during `explore`.** A small HTTP server on `127.0.0.1` at a free port, guarded by a random token, so the bar in your browser can tell Claude what you clicked. It carries the click (which draft, which element, your note) and nothing else, and exits by itself after twelve idle hours.
+- **A Git hook, during `explore`.** A pre-commit check in your repository's `.git/hooks` and two lines in `.git/info/exclude`, so temporary comparison code is not committed by accident. An existing pre-commit hook is kept and extended, not replaced. Both are taken out again at cleanup.
+- **Your design library.** `/ui-creator:library` saves designs to `~/.ui-creator/library` (or the folder in `UI_CREATOR_LIBRARY`), outside any project.
+- **Reading Claude Code's plugin folders.** `/ui-creator:sources` reads Claude Code's list of installed plugins and the name and description of each installed skill, to tell you which UI skills you already have. It reads nothing else from them.
+- **In your browser.** The helper files talk only to that listener on `127.0.0.1`. The tool's own settings and fine-tuning are kept in the browser's storage for that site.
+
+Two things do reach the network, and neither runs by itself: commands that Claude proposes at your request, such as `npx shadcn add`, which you see and approve first; and the maintainer scripts in `tools/`, which download the palette sources when the bundled data is rebuilt.
+
 ## Data
 
 - 275 color palettes from ui-ux-pro-max-skill, tweakcn, daisyUI and Catppuccin, with recomputed WCAG contrast. See `skills/ui-core/data/THIRD_PARTY_NOTICES.md`.
