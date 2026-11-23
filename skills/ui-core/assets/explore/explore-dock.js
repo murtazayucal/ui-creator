@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Temporary "design mode" dock for the explore command: a small floating control in the bottom-left corner
 // that is there even when no comparison is open. Import it once from the app's entry file while design mode
 // is on, and remove that import afterwards:
@@ -5,7 +6,7 @@
 // Plain JavaScript, so it works with any framework. It needs the listener to be running; without it the
 // dock says so and does nothing else.
 import { exploreConfig } from "./explore-config.js";
-import { ACCENTS, getPrefs, icon, inFrame, ping, setPrefs, signal, startPicking, UI } from "./explore-pick.js";
+import { ACCENTS, CREDIT, getPrefs, icon, inFrame, ping, setPrefs, signal, startPicking, UI } from "./explore-pick.js";
 import { openStylePicker, styleLabel } from "./explore-styles.js";
 
 const L = exploreConfig.labels;
@@ -219,7 +220,9 @@ function mount() {
       });
       accents.append(b);
     }
-    menu.replaceChildren(head, el("div", { height: "1px", margin: "4px 2px", background: UI.line }), row(T.theme, themes), row(T.accent, accents));
+    const credit = el("a", { display: "block", padding: "8px 10px 6px", font: `500 11px/16px ${UI.mono}`, color: UI.muted, textDecoration: "none" }, { href: CREDIT.url, target: "_blank", rel: "noopener noreferrer", "data-ui-explore-credit": "" });
+    credit.textContent = `${CREDIT.name} · ${CREDIT.author}`;
+    menu.replaceChildren(head, el("div", { height: "1px", margin: "4px 2px", background: UI.line }), row(T.theme, themes), row(T.accent, accents), el("div", { height: "1px", margin: "4px 2px", background: UI.line }), credit);
   }
   more.addEventListener("click", () => {
     if (menu) return closeMenu();

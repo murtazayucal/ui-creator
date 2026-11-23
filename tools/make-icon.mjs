@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Draws the plugin icon as a PNG with no dependencies.
 //   node tools/make-icon.mjs [--variant monogram|cards|swatches|split]   -> .claude-plugin/icon.png (1024x1024)
 //   The default, monogram, is the icon in use.

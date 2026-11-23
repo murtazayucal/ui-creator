@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // @ts-nocheck
 "use client";
 // React adapter for the explore comparison. Temporary: copy it with the other explore files, delete afterwards.

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Compares two page-check reports (before and after a change) and says what got better or worse.
 // Usage: node verify-compare.mjs <before.json> <after.json>
 // Each file holds one page-check result, or an array of them (several pages or viewport sizes).

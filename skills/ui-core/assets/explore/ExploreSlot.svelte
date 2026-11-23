@@ -1,3 +1,4 @@
+<!-- ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator -->
 <!--
   Svelte 5 adapter for the explore comparison (uses runes; not for Svelte 4).
   Temporary: copy it with the other explore files, delete afterwards.

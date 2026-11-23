@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Builds skills/ui-core/data/registries.json from the public shadcn registry index.
 // Usage: node tools/build-registries.mjs
 // Descriptions are written by each registry's author and are stored as untrusted text.

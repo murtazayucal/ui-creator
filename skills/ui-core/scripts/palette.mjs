@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Query the palette library.
 //   node palette.mjs --domain fintech [--mode light|dark] [--hue blue] [--chroma muted] [--source daisyui]
 //                    [--limit 5] [--include-failing] [--table]

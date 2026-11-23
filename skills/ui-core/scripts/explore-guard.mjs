@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Keeps the temporary explore code out of commits while design mode or a comparison is open.
 //
 //   node explore-guard.mjs install --project <path>

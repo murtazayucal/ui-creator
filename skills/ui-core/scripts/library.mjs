@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // The user's personal design library: designs they liked, kept outside any project so they can be
 // reused in another one. Stored in ~/.ui-creator/library (override with UI_CREATOR_LIBRARY).
 //

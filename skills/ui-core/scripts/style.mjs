@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Query the catalog of design languages (data/styles.json).
 //   node style.mjs                 list ids, names and one-line summaries
 //   node style.mjs --id glass      the full record

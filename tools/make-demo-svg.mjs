@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Builds docs/images/demo.svg: a looping, vector walkthrough of the explore command for the README.
 // It is an illustration drawn to match the tool (pick an element, compare its variations, apply one),
 // not a screen recording. CSS animations only, no script, so it plays inside an <img> on GitHub.

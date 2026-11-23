@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Builds docs/images/styles.svg: a looping, vector tour of the twelve design languages in the Style
 // window, for the README. An illustration drawn to match the tool, not a screen recording. CSS
 // animations only, no script, so it plays inside an <img> on GitHub. Names and summaries come from

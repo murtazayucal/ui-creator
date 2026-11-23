@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Settings for the temporary explore bar and dock. Copy next to explore-slot.jsx and fill in.
 // port 0 means no listener: the bar only switches between drafts and opens the phone preview,
 // and the user answers in chat. The dock needs a listener.

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Lists the component and design sources available to a project:
 // installed skills, the project's own libraries and registries, and the shadcn registry catalog.
 //   node sources.mjs [--project <path>]              overview

@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // The "Style" window of the explore bar and dock: tiles that preview design languages, a field for the
 // user's own words, and a button that sends the choice to the agent. Plain JavaScript and DOM only.
 // The tiles are drawn here with fixed colors so they look the same in every project; the drafts the agent

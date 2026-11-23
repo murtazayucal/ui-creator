@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // @ts-nocheck
 // Angular adapter for the explore comparison, for NgModule-based apps and for Angular 12 and 13.
 // For an app built from standalone components (Angular 14+), use explore-slot.angular.ts instead.

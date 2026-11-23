@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // The framework-independent part of the explore comparison: which draft each instance shows, and the bar
 // at the bottom of the page. Plain JavaScript and DOM only. A thin adapter per framework (React, Vue,
 // Svelte, Angular) renders a wrapper element, calls attach(), and swaps the component when told to.

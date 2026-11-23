@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Zero-dependency color utilities: parsing, sRGB <-> OKLCH, WCAG 2.x contrast.
 // OKLab matrices: Björn Ottosson, "A perceptual color space for image processing" (public domain / MIT).
 

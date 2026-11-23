@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // @ts-nocheck
 "use client";
 // Design-mode dock for frameworks that render on the server first (Next.js App Router, Remix).

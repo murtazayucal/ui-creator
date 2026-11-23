@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Shared by the explore bar and the dock: lets the user click an element and reports what it is.
 // Plain JavaScript, no framework. In a development build it names the component that rendered the
 // element on React, Vue 3, Svelte 5 and Angular; otherwise it reports only the tag, text and classes.
@@ -27,6 +28,8 @@ export const ACCENTS = {
   violet: { dark: "#b79cff", light: "#6d28d9" },
   orange: { dark: "#ffa24a", light: "#c2410c" },
 };
+/** Who made the tool; shown at the foot of its Settings. Part of the copyright notice the license asks to keep. */
+export const CREDIT = { name: "ui-creator", author: "Murtaza Mehdi Yucal", url: "https://github.com/murtazayucal/ui-creator" };
 const PREFS_KEY = "ui-explore-prefs";
 const valid = (p) => ({ theme: THEMES[p?.theme] ? p.theme : "dark", accent: ACCENTS[p?.accent] ? p.accent : "lime" });
 /** The user's own settings for the tool (theme, accent). Kept in this browser only. */

@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Read-only page inspection for the explore command. Evaluate this file in the page once, then call:
 //   __uiExplore.describe("css selector")      or   __uiExplore.describe({ text: "Add to cart" })
 //   __uiExplore.pick()                        then, after the user clicks an element:  __uiExplore.picked

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Static UI audit: scans source files for machine-detectable UX, accessibility and consistency issues.
 // Usage: node audit.mjs [path] [--table] [--max-locations 8]
 // Output is JSON unless --table is given. Findings are heuristics from text patterns: verify before fixing.

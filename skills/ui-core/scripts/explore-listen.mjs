@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Carries clicks on the explore bar and dock from the browser to the agent, so the user does not have to type.
 //
 //   node explore-listen.mjs wait   --config <path to explore-config.js> [--timeout-min 120]

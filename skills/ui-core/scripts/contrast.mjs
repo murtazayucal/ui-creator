@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // WCAG 2.2 contrast for one or more color pairs.
 // Usage: node contrast.mjs <foreground> <background> [<foreground> <background> ...] [--json]
 // Colors: #hex, oklch(), hsl(), rgb(). Quote values that contain spaces or parentheses.

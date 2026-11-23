@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Reports a project's framework, styling approach, component library and token files as JSON.
 // Usage: node detect-stack.mjs [project path]
 // Reads package.json and a few config files; runs nothing from the project.

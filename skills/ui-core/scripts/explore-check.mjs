@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Confirms that an explore session left nothing behind in a project.
 // Usage: node explore-check.mjs [--project <path>]
 // Reports draft files, the copied helper, and any source line that still refers to them.

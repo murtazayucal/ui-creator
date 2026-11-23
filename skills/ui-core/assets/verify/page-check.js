@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Rendered-page checks for the rules a source scan cannot test. Evaluate this file's text in the page once:
 // it defines window.__uiPageCheck and returns a first report. Call __uiPageCheck() again after each resize
 // or theme switch; evaluate the file again after a full page reload. Read-only: it changes nothing in the page.

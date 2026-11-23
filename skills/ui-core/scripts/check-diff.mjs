@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Classifies uncommitted changes against a git base so a styling pass can prove it left logic alone.
 //   node check-diff.mjs [--project <path>] [--base <ref>]     (base defaults to HEAD)
 // Verdict per file:

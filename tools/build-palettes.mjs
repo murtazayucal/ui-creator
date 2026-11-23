@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Builds skills/ui-core/data/palettes.json from the raw sources in .cache/sources/.
 // Sources are parsed as text only; nothing downloaded is executed.
 // Usage: node tools/build-palettes.mjs

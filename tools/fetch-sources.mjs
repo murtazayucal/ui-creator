@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Downloads the raw palette sources into .cache/sources/ (git-ignored).
 // Run this, then `node tools/build-palettes.mjs`.
 // The files are data; build-palettes.mjs parses them as text and never executes them.

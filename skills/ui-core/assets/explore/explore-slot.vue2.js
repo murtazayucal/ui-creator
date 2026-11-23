@@ -1,3 +1,4 @@
+// ui-creator · Copyright (c) 2026 Murtaza Mehdi Yucal · MIT License · https://github.com/murtazayucal/ui-creator
 // Vue 2 adapter for the explore comparison (2.6 and 2.7). Temporary: copy it with the other explore files, delete afterwards.
 //
 // A single-file component cannot hold two components, so for the comparison:
